@@ -5,6 +5,10 @@ VisualStudioVersion = 17.2.32616.157
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClothingShop", "ClothingShop\ClothingShop.csproj", "{B8318F79-C62F-4F9D-9A77-8A360B7E62FB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClothingShop.Infrastructure", "ClothingShop.Infrastructure\ClothingShop.Infrastructure.csproj", "{F669F6D4-A8B7-4538-B7C9-B883D5FA3BA8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClothingShop.Core", "ClothingShop.Core\ClothingShop.Core.csproj", "{BE2C3077-28E0-4FEA-A727-21965037C2E9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{B8318F79-C62F-4F9D-9A77-8A360B7E62FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B8318F79-C62F-4F9D-9A77-8A360B7E62FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B8318F79-C62F-4F9D-9A77-8A360B7E62FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F669F6D4-A8B7-4538-B7C9-B883D5FA3BA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F669F6D4-A8B7-4538-B7C9-B883D5FA3BA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F669F6D4-A8B7-4538-B7C9-B883D5FA3BA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F669F6D4-A8B7-4538-B7C9-B883D5FA3BA8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE2C3077-28E0-4FEA-A727-21965037C2E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE2C3077-28E0-4FEA-A727-21965037C2E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE2C3077-28E0-4FEA-A727-21965037C2E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE2C3077-28E0-4FEA-A727-21965037C2E9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
