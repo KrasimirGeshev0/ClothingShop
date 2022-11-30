@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ClothingShop.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221120171212_InitializeDB")]
-    partial class InitializeDB
+    [Migration("20221130213313_RemoveUserToSellerRelation")]
+    partial class RemoveUserToSellerRelation
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -32,9 +32,6 @@ namespace ClothingShop.Infrastructure.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("Balance")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
@@ -46,16 +43,6 @@ namespace ClothingShop.Infrastructure.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -101,21 +88,55 @@ namespace ClothingShop.Infrastructure.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "dea12856-c198-4129-b3f3-b893d8395082",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "53a94ed3-f3fd-44b8-9da6-12dc77e265d2",
+                            Email = "seller@mail.com",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "SELLER@MAIL.COM",
+                            NormalizedUserName = "SELLERUSER",
+                            PasswordHash = "AQAAAAEAACcQAAAAEMXyprs1UK/mOgI5aLufg0gf5+bZlxtYoFzoagis9apiEfC92vl0dr5hqwVuBBGnpg==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "ab2da260-66bd-4aea-9580-cf75f1723d51",
+                            TwoFactorEnabled = false,
+                            UserName = "SellerUser"
+                        },
+                        new
+                        {
+                            Id = "6d5800ce-d726-4fc8-83d9-d6b3ac1f591e",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "ac09644c-ad85-4f3c-9496-3233b4afbaf9",
+                            Email = "user@mail.com",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "USER@MAIL.COM",
+                            NormalizedUserName = "NORMALUSER",
+                            PasswordHash = "AQAAAAEAACcQAAAAEJcEt1WehyzYBfVNAzL+BA84Bxb19p/kQtRD0LR2JIlNqXb3G8jbHK5chgU/JC93iA==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "a2e196eb-87de-4ca3-a542-56eb17e441c8",
+                            TwoFactorEnabled = false,
+                            UserName = "NormalUser"
+                        });
                 });
 
-            modelBuilder.Entity("ClothingShop.Infrastructure.Data.Entities.ApplicationUserProduct", b =>
+            modelBuilder.Entity("ClothingShop.Infrastructure.Data.Entities.ApplicationUserCloth", b =>
                 {
                     b.Property<string>("ApplicationUserId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("ProductId")
+                    b.Property<int>("ClothId")
                         .HasColumnType("int");
 
-                    b.HasKey("ApplicationUserId", "ProductId");
+                    b.HasKey("ApplicationUserId", "ClothId");
 
-                    b.HasIndex("ProductId");
+                    b.HasIndex("ClothId");
 
-                    b.ToTable("ApplicationUsersProducts");
+                    b.ToTable("ApplicationUsersClothes");
                 });
 
             modelBuilder.Entity("ClothingShop.Infrastructure.Data.Entities.Brand", b =>
@@ -154,7 +175,7 @@ namespace ClothingShop.Infrastructure.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("ClothingShop.Infrastructure.Data.Entities.Product", b =>
+            modelBuilder.Entity("ClothingShop.Infrastructure.Data.Entities.Cloth", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -176,11 +197,9 @@ namespace ClothingShop.Infrastructure.Migrations
                     b.Property<int>("GenderOrientation")
                         .HasColumnType("int");
 
-                    b.Property<int>("LQuantity")
-                        .HasColumnType("int");
-
-                    b.Property<int>("MQuantity")
-                        .HasColumnType("int");
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -190,10 +209,7 @@ namespace ClothingShop.Infrastructure.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("SQuantity")
-                        .HasColumnType("int");
-
-                    b.Property<int>("XlQuantity")
+                    b.Property<int>("SizesQuantities")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -202,7 +218,65 @@ namespace ClothingShop.Infrastructure.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Products");
+                    b.HasIndex("SizesQuantities");
+
+                    b.ToTable("Clothes");
+                });
+
+            modelBuilder.Entity("ClothingShop.Infrastructure.Data.Entities.ClothSizesQuantities", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("LQuantity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MQuantity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SQuantity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("XlQuantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ClothesSizesQuantities");
+                });
+
+            modelBuilder.Entity("ClothingShop.Infrastructure.Data.Entities.Seller", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("ApplicationUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("FirstName")
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("LastName")
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.ToTable("Sellers");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -342,42 +416,61 @@ namespace ClothingShop.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("ClothingShop.Infrastructure.Data.Entities.ApplicationUserProduct", b =>
+            modelBuilder.Entity("ClothingShop.Infrastructure.Data.Entities.ApplicationUserCloth", b =>
                 {
                     b.HasOne("ClothingShop.Infrastructure.Data.Entities.ApplicationUser", "ApplicationUser")
-                        .WithMany("ApplicationUserProducts")
+                        .WithMany("ApplicationUserClothes")
                         .HasForeignKey("ApplicationUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ClothingShop.Infrastructure.Data.Entities.Product", "Product")
+                    b.HasOne("ClothingShop.Infrastructure.Data.Entities.Cloth", "Cloth")
                         .WithMany("ProductApplicationUsers")
-                        .HasForeignKey("ProductId")
+                        .HasForeignKey("ClothId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("ApplicationUser");
 
-                    b.Navigation("Product");
+                    b.Navigation("Cloth");
                 });
 
-            modelBuilder.Entity("ClothingShop.Infrastructure.Data.Entities.Product", b =>
+            modelBuilder.Entity("ClothingShop.Infrastructure.Data.Entities.Cloth", b =>
                 {
                     b.HasOne("ClothingShop.Infrastructure.Data.Entities.Brand", "Brand")
-                        .WithMany("Products")
+                        .WithMany("Clothes")
                         .HasForeignKey("BrandId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("ClothingShop.Infrastructure.Data.Entities.Category", "Category")
-                        .WithMany("Products")
+                        .WithMany("Clothes")
                         .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ClothingShop.Infrastructure.Data.Entities.ClothSizesQuantities", "ClothSizesQuantities")
+                        .WithMany()
+                        .HasForeignKey("SizesQuantities")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Brand");
 
                     b.Navigation("Category");
+
+                    b.Navigation("ClothSizesQuantities");
+                });
+
+            modelBuilder.Entity("ClothingShop.Infrastructure.Data.Entities.Seller", b =>
+                {
+                    b.HasOne("ClothingShop.Infrastructure.Data.Entities.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -433,20 +526,20 @@ namespace ClothingShop.Infrastructure.Migrations
 
             modelBuilder.Entity("ClothingShop.Infrastructure.Data.Entities.ApplicationUser", b =>
                 {
-                    b.Navigation("ApplicationUserProducts");
+                    b.Navigation("ApplicationUserClothes");
                 });
 
             modelBuilder.Entity("ClothingShop.Infrastructure.Data.Entities.Brand", b =>
                 {
-                    b.Navigation("Products");
+                    b.Navigation("Clothes");
                 });
 
             modelBuilder.Entity("ClothingShop.Infrastructure.Data.Entities.Category", b =>
                 {
-                    b.Navigation("Products");
+                    b.Navigation("Clothes");
                 });
 
-            modelBuilder.Entity("ClothingShop.Infrastructure.Data.Entities.Product", b =>
+            modelBuilder.Entity("ClothingShop.Infrastructure.Data.Entities.Cloth", b =>
                 {
                     b.Navigation("ProductApplicationUsers");
                 });

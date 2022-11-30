@@ -1,15 +1,9 @@
 ﻿namespace ClothingShop.Infrastructure.Data
 {
-    internal class DataConstants
+    public class DataConstants
     {
         public class User
         {
-            public const int FirstNameMaxLength = 30;
-            public const int FirstNameMinLength = 2;
-
-            public const int LastNameMaxLength = 30;
-            public const int LastNameMinLength = 2;
-
             public const int UserNameMaxLength = 20;
             public const int UserNameMinLength = 5;
 
@@ -17,16 +11,13 @@
             public const int EmailMinLength = 10;
 
             public const int PasswordMaxLength = 20;
-            public const int PasswordMinLength = 5;
+            public const int PasswordMinLength = 3;
         }
 
-        public class Product
+        public class Cloth
         {
-            public const int NameMaxLength = 40;
+            public const int NameMaxLength = 55;
             public const int NameMinLength = 5;
-
-            public const int QuantityMax = 500;
-            public const int QuantityMin = 1;
 
             public const int DescriptionMaxLength = 5000;
             public const int DescriptionMinLength = 5;
@@ -44,5 +35,20 @@
             public const int NameMinLength = 2;
         }
 
+        public class ClothSizesQuantities
+        {
+            public const int QuantityMax = 500;
+            public const int QuantityMin = 0;
+        }
+
+        public class Seller
+        {
+            public const int FirstNameMaxLength = 30;
+            public const int FirstNameMinLength = 2;
+                    
+            public const int LastNameMaxLength = 30;
+            public const int LastNameMinLength = 2;
+        }
+                    
     }
 }

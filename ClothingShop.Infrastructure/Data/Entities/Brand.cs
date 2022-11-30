@@ -12,6 +12,10 @@ namespace ClothingShop.Infrastructure.Data.Entities
         [MaxLength(NameMaxLength)]
         public string Name { get; set; } = null!;
 
-        public List<Product> Products { get; set; } = new List<Product>();
+        [Required] 
+        public string Logo { get; set; } = null!;
+
+        public List<Cloth> Clothes { get; set; } = new List<Cloth>();
     }
 }
+    

@@ -1,11 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using ClothingShop.Infrastructure.Data.Enums;
-using static ClothingShop.Infrastructure.Data.DataConstants.Product;
+using static ClothingShop.Infrastructure.Data.DataConstants.Cloth;
 
 namespace ClothingShop.Infrastructure.Data.Entities
 {
-    public class Product
+    public class Cloth
     {
         [Key]
         public int Id { get; set; }
@@ -20,17 +20,9 @@ namespace ClothingShop.Infrastructure.Data.Entities
         [MaxLength(DescriptionMaxLength)]
         public string Description { get; set; } = null!;
 
-        [Required]
-        public string ImageUrl { get; set; }
+        [Required] 
+        public string ImageUrl { get; set; } = null!;
 
-        [Range(QuantityMin,QuantityMax)]
-        public int SQuantity { get; set; }
-        [Range(QuantityMin, QuantityMax)]
-        public int MQuantity { get; set; }
-        [Range(QuantityMin, QuantityMax)]
-        public int LQuantity { get; set; }
-        [Range(QuantityMin, QuantityMax)]
-        public int XlQuantity { get; set; }
 
         [Required]
         public ProductGenderOrient GenderOrientation { get; set; } = new ProductGenderOrient();
@@ -45,7 +37,11 @@ namespace ClothingShop.Infrastructure.Data.Entities
         public int CategoryId { get; set; }
         public Category Category { get; set; } = null!;
 
-        public List<ApplicationUserProduct> ProductApplicationUsers { get; set; } = new List<ApplicationUserProduct>();
+        [ForeignKey(nameof(ClothSizesQuantities))]
+        public int ClothSizesQuantitiesId { get; set; }
+        public ClothSizesQuantities ClothSizesQuantities { get; set; } = null!;
+            
+        public List<ApplicationUserCloth> ProductApplicationUsers { get; set; } = new List<ApplicationUserCloth>();
 
     }
 }
