@@ -1,5 +1,5 @@
 ﻿using ClothingShop.Infrastructure.Data.Entities;
-using ClothingShop.Models;
+using ClothingShop.Models.UI;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

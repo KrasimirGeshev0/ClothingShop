@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ClothingShop.Models
+namespace ClothingShop.Models.UI
 {
     public class LoginViewModel
     {

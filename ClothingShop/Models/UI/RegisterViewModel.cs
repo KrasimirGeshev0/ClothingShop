@@ -1,13 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using ClothingShop.Infrastructure.Data;
 using static ClothingShop.Infrastructure.Data.DataConstants.User;
 
-namespace ClothingShop.Models
+namespace ClothingShop.Models.UI
 {
     public class RegisterViewModel
     {
         [Required]
-        [StringLength(DataConstants.User.UserNameMaxLength, MinimumLength = DataConstants.User.UserNameMinLength)]
+        [StringLength(UserNameMaxLength, MinimumLength = UserNameMinLength)]
         public string UserName { get; set; } = null!;
 
 

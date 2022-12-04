@@ -1,3 +1,4 @@
+using ClothingShop.Extensions;
 using ClothingShop.Infrastructure.Data;
 using ClothingShop.Infrastructure.Data.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +19,7 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
     })
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
+builder.Services.AddApplicationServices();
 
 builder.Services.ConfigureApplicationCookie(options =>
 {

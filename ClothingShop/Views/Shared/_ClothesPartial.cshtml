@@ -1,0 +1,30 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model ClothingShop.Core.Models.ClothModels.ClothesServiceModel
+
+<div class="col-md-4">
+    <div class="card mb-3">
+        <img class="card-img-top" src="@Model.ImageUrl" alt="House Image">
+        <div class="card-body text-center">
+            <h4>@Model.Name</h4>
+            <h6>
+                Price Per Month:
+                <b>@String.Format("{0:f2}", Model.Price) BGN</b>
+            </h6>
+            <br />
+            <a asp-controller="Clothes" asp-action="Details" asp-route-id="@Model.Id"
+               class="btn btn-success">Details</a>
+            @if (this.User.Identity.IsAuthenticated)
+            {
+                <a asp-controller="Clothes" asp-action="Edit" asp-route-id="@Model.Id"
+                   class="btn btn-warning">Edit</a>
+                <a asp-controller="Clothes" asp-action="Delete" asp-route-id="@Model.Id"
+                   class="btn btn-danger">Delete</a>
+                <p></p>
+                <form class="input-group-sm" asp-controller="Clothes"
+                          asp-action="AddToCart" asp-route-id="@Model.Id" method="post">
+                    <input class="btn btn-primary" type="submit" value="Rent" />
+                </form>
+            }
+        </div>
+    </div>
+</div>
