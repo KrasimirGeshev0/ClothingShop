@@ -77,12 +77,56 @@ namespace ClothingShop.Core.Services
         public async Task<IEnumerable<int>> AllAvailableClothes()
         {
             return await repo.AllReadonly<Cloth>()
-                .Where(c => c.ClothSizesQuantities.LQuantity > 0 ||
-                            c.ClothSizesQuantities.SQuantity > 0 ||
-                            c.ClothSizesQuantities.MQuantity > 0 ||
-                            c.ClothSizesQuantities.XlQuantity > 0)
+                .Where(c => c.Quantity > 0)
                 .Select(c => c.Id)
                 .ToListAsync();
+        }
+
+        public async Task<IEnumerable<ClothesCategoryModel>> AllCategories()
+        {
+            return await repo.AllReadonly<Category>()
+                .Select(c => new ClothesCategoryModel()
+                {
+                    Id = c.Id,
+                    Name = c.Name
+                }).ToListAsync();
+        }
+
+        public async Task<IEnumerable<ClothesBrandModel>> AllBrands()
+        {
+            return await repo.AllReadonly<Brand>()
+                .Select(c => new ClothesBrandModel()
+                {
+                    Id = c.Id,
+                    Name = c.Name
+                }).ToListAsync();
+        }
+
+        public async Task<bool> CategoryExists(int categoryId)
+        {
+            return await repo.AllReadonly<Category>().AnyAsync(c => c.Id == categoryId);
+        }
+
+        public async Task<bool> BrandExists(int brandId)
+        {
+            return await repo.AllReadonly<Brand>().AnyAsync(b => b.Id == brandId);
+        }
+
+        public async Task Create(ClothAddToShopModel model)
+        {
+            var cloth = new Cloth()
+            {
+                Name = model.Name,
+                Price = model.Price,
+                ImageUrl = model.ImageUrl,
+                Description = model.Description,
+                Quantity = model.Quantity,
+                BrandId = model.BrandId,
+                CategoryId = model.CategoryId,
+            };
+
+            await repo.AddAsync(cloth);
+            await repo.SaveChangesAsync();
         }
     }
 }

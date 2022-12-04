@@ -23,10 +23,11 @@ namespace ClothingShop.Infrastructure.Data.Entities
         [Required] 
         public string ImageUrl { get; set; } = null!;
 
-
         [Required]
         public ProductGenderOrient GenderOrientation { get; set; } = new ProductGenderOrient();
 
+        [Range(QuantityMin, QuantityMax)]
+        public int Quantity { get; set; }
 
         [ForeignKey(nameof(Brand))]
         public int BrandId { get; set; }
@@ -37,10 +38,6 @@ namespace ClothingShop.Infrastructure.Data.Entities
         public int CategoryId { get; set; }
         public Category Category { get; set; } = null!;
 
-        [ForeignKey(nameof(ClothSizesQuantities))]
-        public int ClothSizesQuantitiesId { get; set; }
-        public ClothSizesQuantities ClothSizesQuantities { get; set; } = null!;
-            
         public List<ApplicationUserCloth> ProductApplicationUsers { get; set; } = new List<ApplicationUserCloth>();
 
     }

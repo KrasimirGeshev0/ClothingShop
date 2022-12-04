@@ -11,16 +11,16 @@
                 <b>@String.Format("{0:f2}", Model.Price) BGN</b>
             </h6>
             <br />
-            <a asp-controller="Clothes" asp-action="Details" asp-route-id="@Model.Id"
+            <a asp-controller="Cloth" asp-action="Details" asp-route-id="@Model.Id"
                class="btn btn-success">Details</a>
-            @if (this.User.Identity.IsAuthenticated)
+            @if (this.User.Identity.IsAuthenticated) //TODO Only Seller Should be able to access this tab
             {
-                <a asp-controller="Clothes" asp-action="Edit" asp-route-id="@Model.Id"
+                <a asp-controller="Cloth" asp-action="Edit" asp-route-id="@Model.Id"
                    class="btn btn-warning">Edit</a>
-                <a asp-controller="Clothes" asp-action="Delete" asp-route-id="@Model.Id"
+                <a asp-controller="Cloth" asp-action="Delete" asp-route-id="@Model.Id"
                    class="btn btn-danger">Delete</a>
                 <p></p>
-                <form class="input-group-sm" asp-controller="Clothes"
+                <form class="input-group-sm" asp-controller="Cloth"
                           asp-action="AddToCart" asp-route-id="@Model.Id" method="post">
                     <input class="btn btn-primary" type="submit" value="Rent" />
                 </form>

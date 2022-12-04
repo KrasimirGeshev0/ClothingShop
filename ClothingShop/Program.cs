@@ -1,6 +1,8 @@
 using ClothingShop.Extensions;
 using ClothingShop.Infrastructure.Data;
 using ClothingShop.Infrastructure.Data.Entities;
+using ClothingShop.ModelBinders;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,7 +20,11 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
         options.SignIn.RequireConfirmedAccount = false;
     })
     .AddEntityFrameworkStores<ApplicationDbContext>();
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews().AddMvcOptions(options =>
+{
+    options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
+    options.ModelBinderProviders.Insert(0, new DecimalModelBinderProvider());
+}); ;
 builder.Services.AddApplicationServices();
 
 builder.Services.ConfigureApplicationCookie(options =>

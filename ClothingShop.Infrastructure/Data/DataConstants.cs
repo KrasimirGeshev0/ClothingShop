@@ -19,8 +19,14 @@
             public const int NameMaxLength = 55;
             public const int NameMinLength = 5;
 
+            public const string PriceMaxValue = "0.00";
+            public const string PriceMinValue = "10000.00";
+
             public const int DescriptionMaxLength = 5000;
             public const int DescriptionMinLength = 5;
+
+            public const int QuantityMax = 500;
+            public const int QuantityMin = 0;
         }
 
         public class Category
@@ -33,12 +39,6 @@
         {
             public const int NameMaxLength = 30;
             public const int NameMinLength = 2;
-        }
-
-        public class ClothSizesQuantities
-        {
-            public const int QuantityMax = 500;
-            public const int QuantityMin = 0;
         }
 
         public class Seller

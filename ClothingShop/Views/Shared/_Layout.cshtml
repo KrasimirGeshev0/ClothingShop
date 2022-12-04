@@ -25,7 +25,11 @@
                         @if (User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Clothes" asp-action="All">All Clothes</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Cloth" asp-action="All">All Clothes</a>
+                            </li>
+                            //TODO Only Seller Should be able to access this tab
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Cloth" asp-action="Add">Add Cloth</a>
                             </li>
                         }
                     </ul>

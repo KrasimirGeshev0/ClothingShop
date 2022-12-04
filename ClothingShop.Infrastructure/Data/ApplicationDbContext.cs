@@ -17,8 +17,6 @@ namespace ClothingShop.Infrastructure.Data
 
         public DbSet<Seller> Sellers { get; set; }
 
-        public DbSet<ClothSizesQuantities> ClothesSizesQuantities{ get; set; }   
-
         public DbSet<Brand> Brands { get; set; }
             
         public DbSet<Category> Categories { get; set; }
@@ -30,7 +28,6 @@ namespace ClothingShop.Infrastructure.Data
             builder.ApplyConfiguration(new ApplicationUserConfiguration());
             builder.ApplyConfiguration(new SellerConfiguration());
             builder.ApplyConfiguration(new BrandConfiguration());
-            builder.ApplyConfiguration(new ClothesSizeQuantitiesConfiguration());
             builder.ApplyConfiguration(new CategoryConfiguration());
             builder.ApplyConfiguration(new ClothConfiguration());
 
