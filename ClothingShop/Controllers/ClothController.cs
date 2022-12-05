@@ -66,7 +66,6 @@ namespace ClothingShop.Controllers
 
             await clothService.Create(model);
 
-            //TODO 
             return RedirectToAction(nameof(All), new AllClothesQueryModel()
             {
                 Sorting = ClothesSorting.Newest
@@ -85,10 +84,18 @@ namespace ClothingShop.Controllers
             return null;
         }
 
-        //TODO Implement
-        public async Task<IActionResult> Delete()
+        public async Task<IActionResult> Delete(int id)
         {
-            return null;
+            if (await clothService.ClothExists(id))
+            {
+                await clothService.Delete(id);
+            }
+            else
+            {
+                throw new ArgumentException("Invalid ClothId");
+            }
+
+            return RedirectToAction(nameof(All));
         }
 
         //TODO Implement

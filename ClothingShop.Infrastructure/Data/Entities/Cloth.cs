@@ -23,6 +23,8 @@ namespace ClothingShop.Infrastructure.Data.Entities
         [Required] 
         public string ImageUrl { get; set; } = null!;
 
+        public bool IsAvailable { get; set; }  = true;
+
         [Required]
         public ProductGenderOrient GenderOrientation { get; set; } = new ProductGenderOrient();
 

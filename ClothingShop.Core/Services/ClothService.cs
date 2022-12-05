@@ -2,6 +2,7 @@
 using ClothingShop.Core.Models.ClothModels;
 using ClothingShop.Infrastructure.Data.Common;
 using ClothingShop.Infrastructure.Data.Entities;
+using ClothingShop.Infrastructure.Data.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClothingShop.Core.Services
@@ -20,8 +21,8 @@ namespace ClothingShop.Core.Services
             int currentPage = 1, int clothesPerPage = 1)
         {
             var result = new ClothesQueryModel();
-            var availableClothes = await AllAvailableClothes();
-            var clothes = repo.AllReadonly<Cloth>().Where(c => availableClothes.Contains(c.Id));
+            var availableClothes = await AllClothesWithEnoughQuantity();
+            var clothes = repo.AllReadonly<Cloth>().Where(c => availableClothes.Contains(c.Id) && c.IsAvailable);
 
             if (string.IsNullOrEmpty(category) == false)
             {
@@ -37,6 +38,7 @@ namespace ClothingShop.Core.Services
                     .Where(c => EF.Functions.Like(c.Name.ToLower(), searchTerm) ||
                                 EF.Functions.Like(c.Description.ToLower(), searchTerm) ||
                                 EF.Functions.Like(c.Brand.Name.ToLower(), searchTerm));
+
             }
 
             clothes = sorting switch
@@ -74,7 +76,7 @@ namespace ClothingShop.Core.Services
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<int>> AllAvailableClothes()
+        public async Task<IEnumerable<int>> AllClothesWithEnoughQuantity()
         {
             return await repo.AllReadonly<Cloth>()
                 .Where(c => c.Quantity > 0)
@@ -112,6 +114,11 @@ namespace ClothingShop.Core.Services
             return await repo.AllReadonly<Brand>().AnyAsync(b => b.Id == brandId);
         }
 
+        public async Task<bool> ClothExists(int clothId)
+        {
+            return await repo.AllReadonly<Cloth>().AnyAsync(c => c.Id == clothId);
+        }
+
         public async Task Create(ClothAddToShopModel model)
         {
             var cloth = new Cloth()
@@ -122,10 +129,24 @@ namespace ClothingShop.Core.Services
                 Description = model.Description,
                 Quantity = model.Quantity,
                 BrandId = model.BrandId,
+                GenderOrientation = Enum.Parse<ProductGenderOrient>(model.GenderOrientation),
                 CategoryId = model.CategoryId,
             };
 
             await repo.AddAsync(cloth);
+            await repo.SaveChangesAsync();
+        }
+
+        public async Task Delete(int clothId)
+        {
+            var cloth = await repo.All<Cloth>()
+                .FirstOrDefaultAsync(c => c.Id == clothId);
+
+            if (cloth != null)
+            {
+                cloth.IsAvailable = false;
+            }
+
             await repo.SaveChangesAsync();
         }
     }

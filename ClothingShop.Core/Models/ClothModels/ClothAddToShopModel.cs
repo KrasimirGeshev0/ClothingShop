@@ -25,8 +25,7 @@ namespace ClothingShop.Core.Models.ClothModels
         [Range(QuantityMin, QuantityMax)]
         public int Quantity { get; set; }
 
-        [Required]
-        public ProductGenderOrient GenderOrientation { get; set; } = new ProductGenderOrient();
+        public string GenderOrientation { get; set; } = null!;
 
         [Display(Name = "Category")]
         public int CategoryId { get; set; }

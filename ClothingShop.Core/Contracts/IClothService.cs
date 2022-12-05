@@ -14,7 +14,7 @@ namespace ClothingShop.Core.Contracts
 
         Task<IEnumerable<string>> AllCategoriesNames();
 
-        Task<IEnumerable<int>> AllAvailableClothes();
+        Task<IEnumerable<int>> AllClothesWithEnoughQuantity();
 
         Task<IEnumerable<ClothesCategoryModel>> AllCategories();
         Task<IEnumerable<ClothesBrandModel>> AllBrands();
@@ -23,7 +23,11 @@ namespace ClothingShop.Core.Contracts
 
         Task<bool> BrandExists(int brandId);
 
-        Task Create(ClothAddToShopModel model);    
+        Task<bool> ClothExists(int clothId);
+
+        Task Create(ClothAddToShopModel model); 
+
+        Task Delete(int clothId);   
     }
 }
     
