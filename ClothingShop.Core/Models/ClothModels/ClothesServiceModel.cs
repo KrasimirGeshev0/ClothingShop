@@ -15,5 +15,7 @@ namespace ClothingShop.Core.Models.ClothModels
 
         public string Category { get; set; } = null!;
 
+        public string Brand { get; set; } = null!;
+
     }
 }

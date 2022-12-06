@@ -8,6 +8,7 @@ namespace ClothingShop.Core.Contracts
         Task<ClothesQueryModel> All(
             ClothesSorting sorting = ClothesSorting.Newest,
             string? category = null,
+            string? genderOrientation = null,
             string? searchTerm = null,
             int currentPage = 1,
             int clothesPerPage = 1);

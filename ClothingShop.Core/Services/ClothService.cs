@@ -17,7 +17,7 @@ namespace ClothingShop.Core.Services
         }
 
 
-        public async Task<ClothesQueryModel> All(ClothesSorting sorting = ClothesSorting.Newest, string? category = null, string? searchTerm = null,
+        public async Task<ClothesQueryModel> All(ClothesSorting sorting = ClothesSorting.Newest, string? category = null,string? genderOrientation = null, string? searchTerm = null,
             int currentPage = 1, int clothesPerPage = 1)
         {
             var result = new ClothesQueryModel();
@@ -30,7 +30,14 @@ namespace ClothingShop.Core.Services
                     .Where(c => c.Category.Name == category);
             }
 
-            if (string.IsNullOrEmpty(searchTerm) == false)
+            if (string.IsNullOrEmpty(genderOrientation) == false)
+            {
+                var parsedGO = Enum.Parse<ProductGenderOrient>(genderOrientation);
+                clothes = clothes
+                    .Where(c => c.GenderOrientation == parsedGO);
+            }
+
+            if (string.IsNullOrEmpty(searchTerm) == false)  
             {
                 searchTerm = $"%{searchTerm.ToLower()}%";
 
@@ -59,7 +66,8 @@ namespace ClothingShop.Core.Services
                     ImageUrl = c.ImageUrl,
                     Price = c.Price,
                     Name = c.Name,
-                    Category = c.Category.Name
+                    Category = c.Category.Name,
+                    Brand = c.Brand.Name,
                 })
                 .ToListAsync();
 

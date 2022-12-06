@@ -22,6 +22,7 @@ namespace ClothingShop.Controllers
             var result = await clothService.All(
                 query.Sorting,
                 query.Category,
+                query.GenderOrientation,
                 query.SearchTerm,
                 query.CurrentPage,
                 AllClothesQueryModel.ClothesPerPage);

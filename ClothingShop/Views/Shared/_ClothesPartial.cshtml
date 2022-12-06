@@ -6,15 +6,20 @@
         <img class="card-img-top" src="@Model.ImageUrl" alt="House Image">
         <div class="card-body text-center">
             <h4>@Model.Name</h4>
-            <h6>
-                Price Per Month:
+            <h5>
+                Price:
                 <b>@String.Format("{0:f2}", Model.Price) BGN</b>
+            </h5>
+            <h6>
+                Brand:
+                <b>@Model.Brand</b>
             </h6>
             <br />
             <a asp-controller="Cloth" asp-action="Details" asp-route-id="@Model.Id"
                class="btn btn-success">Details</a>
-            @if (this.User.Identity.IsAuthenticated) //TODO Only Seller Should be able to access this tab
+            @if (this.User.Identity.IsAuthenticated) //TODO Only Seller Should be able to access this tab 
             {
+                //TODO Add Brand name to the product 
                 <a asp-controller="Cloth" asp-action="Edit" asp-route-id="@Model.Id"
                    class="btn btn-warning">Edit</a>
                 <a asp-controller="Cloth" asp-action="Delete" asp-route-id="@Model.Id"

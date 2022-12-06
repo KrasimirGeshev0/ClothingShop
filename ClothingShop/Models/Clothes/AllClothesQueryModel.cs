@@ -1,4 +1,5 @@
-﻿using ClothingShop.Core.Models.ClothModels;
+﻿using System.ComponentModel.DataAnnotations;
+using ClothingShop.Core.Models.ClothModels;
 
 namespace ClothingShop.Models.Clothes
 {
@@ -8,6 +9,7 @@ namespace ClothingShop.Models.Clothes
 
         public string? Category { get; set; }
 
+        [Display(Name = "Search")]
         public string? SearchTerm { get; set; } 
 
         public int CurrentPage { get; set; } = 1;
@@ -15,6 +17,9 @@ namespace ClothingShop.Models.Clothes
         public const int ClothesPerPage = 3;
 
         public int TotalClothesCount { get; set; }
+
+        [Display(Name = "Sex")]
+        public string? GenderOrientation { get; set; }
 
         public IEnumerable<string> Categories { get; set; } = Enumerable.Empty<string>();
 
