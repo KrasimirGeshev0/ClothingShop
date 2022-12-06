@@ -27,6 +27,7 @@
 
             public const int QuantityMax = 500;
             public const int QuantityMin = 0;
+            public const int QuantityMinAddAndEditModel = 1;
         }
 
         public class Category

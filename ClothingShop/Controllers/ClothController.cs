@@ -36,7 +36,7 @@ namespace ClothingShop.Controllers
         [HttpGet]
         public async Task<IActionResult> Add()
         {
-            var model = new ClothAddToShopModel()
+            var model = new ClothAddToShopAndEditModel()
             {
                 Categories = await clothService.AllCategories(),
                 Brands = await clothService.AllBrands()
@@ -45,7 +45,7 @@ namespace ClothingShop.Controllers
             return View(model);
         }
 
-        public async Task<IActionResult> Add(ClothAddToShopModel model)
+        public async Task<IActionResult> Add(ClothAddToShopAndEditModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -72,21 +72,82 @@ namespace ClothingShop.Controllers
             });
         }
 
-        //TODO Implement
+        //TODO Implement method Details
         public async Task<IActionResult> Details()
         {
             return null;
         }
 
-        //TODO Implement
-        public async Task<IActionResult> Edit()
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)    
         {
-            return null;
+            if (await clothService.IsClothAvailable(id) == false)
+            {
+                return RedirectToAction(nameof(All));
+            }
+
+            var cloth = await clothService.GetClothDetails(id);
+            var categoryId = await clothService.GetClothCategoryId(id);
+            var brandId = await clothService.GetClothBrandId(id);
+
+            var model = new ClothAddToShopAndEditModel()
+            {
+                Id = id,
+                CategoryId = categoryId,
+                BrandId = brandId,
+                Name = cloth.Name,
+                Description = cloth.Description,
+                GenderOrientation = cloth.GenderOrientation,
+                ImageUrl = cloth.ImageUrl,
+                Price = cloth.Price,
+                Quantity = cloth.Quantity,
+                Categories = await clothService.AllCategories(),
+                Brands = await  clothService.AllBrands()
+            };
+
+            return View(model);
         }
 
+        //TODO Edit post method
+        [HttpPost]
+        public async Task<IActionResult> Edit(ClothAddToShopAndEditModel model)
+        {
+            if (await clothService.IsClothAvailable(model.Id) == false)
+            {
+                ModelState.AddModelError("", "Cloth does not exist");
+                model.Categories = await clothService.AllCategories();
+                model.Brands = await clothService.AllBrands();
+
+                return View(model);
+            }
+
+            if (await clothService.CategoryExists(model.CategoryId) == false)
+            {
+                ModelState.AddModelError(nameof(model.CategoryId), "Category does not exists");
+            }
+
+            if (await clothService.BrandExists(model.BrandId) == false)
+            {
+                ModelState.AddModelError(nameof(model.BrandId), "Brand does not exists");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                model.Categories = await clothService.AllCategories();
+                model.Brands = await clothService.AllBrands();
+                return View(model);
+            }
+
+            await clothService.Edit(model);
+
+            return RedirectToAction("All");
+        }
+
+
+        [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
-            if (await clothService.ClothExists(id))
+            if (await clothService.IsClothAvailable(id))
             {
                 await clothService.Delete(id);
             }

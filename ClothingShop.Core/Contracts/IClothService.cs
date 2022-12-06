@@ -23,11 +23,19 @@ namespace ClothingShop.Core.Contracts
 
         Task<bool> BrandExists(int brandId);
 
-        Task<bool> ClothExists(int clothId);
+        Task<bool> IsClothAvailable(int clothId);
 
-        Task Create(ClothAddToShopModel model); 
+        Task Create(ClothAddToShopAndEditModel model); 
 
-        Task Delete(int clothId);   
+        Task Delete(int clothId);
+
+        Task Edit(ClothAddToShopAndEditModel model);
+
+        Task<int> GetClothCategoryId(int clothId);
+
+        Task<int> GetClothBrandId(int clothId);
+
+        Task<ClothDetailsModel> GetClothDetails(int clothId);
     }
 }
     

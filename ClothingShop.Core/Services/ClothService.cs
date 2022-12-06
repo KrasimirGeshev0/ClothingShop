@@ -114,12 +114,21 @@ namespace ClothingShop.Core.Services
             return await repo.AllReadonly<Brand>().AnyAsync(b => b.Id == brandId);
         }
 
-        public async Task<bool> ClothExists(int clothId)
+        public async Task<bool> IsClothAvailable(int clothId)
         {
-            return await repo.AllReadonly<Cloth>().AnyAsync(c => c.Id == clothId);
+            if (await repo.AllReadonly<Cloth>().AnyAsync(c => c.Id == clothId))
+            {
+                if (await repo.AllReadonly<Cloth>().Where(c => c.Id == clothId).Select(c => c.IsAvailable).FirstOrDefaultAsync())
+                {
+                    return true;
+                }
+            }
+
+            return false;
+
         }
 
-        public async Task Create(ClothAddToShopModel model)
+        public async Task Create(ClothAddToShopAndEditModel model)  
         {
             var cloth = new Cloth()
             {
@@ -148,6 +157,47 @@ namespace ClothingShop.Core.Services
             }
 
             await repo.SaveChangesAsync();
+        }
+
+        public async Task Edit(ClothAddToShopAndEditModel model)
+        {
+            var cloth = await repo.GetByIdAsync<Cloth>(model.Id);
+
+            cloth.Name = model.Name;
+            cloth.Price = model.Price;
+            cloth.ImageUrl = model.ImageUrl;
+            cloth.Description = model.Description;
+            cloth.Quantity = model.Quantity;
+            cloth.BrandId = model.BrandId;
+            cloth.CategoryId = model.CategoryId;
+            cloth.GenderOrientation = Enum.Parse<ProductGenderOrient>(model.GenderOrientation);
+
+            await repo.SaveChangesAsync();
+        }
+
+        public async Task<int> GetClothCategoryId(int clothId)
+        {
+            return (await repo.GetByIdAsync<Cloth>(clothId)).CategoryId;
+        }
+
+        public async Task<int> GetClothBrandId(int clothId)
+        {
+            return (await repo.GetByIdAsync<Cloth>(clothId)).BrandId;
+        }
+
+        public async Task<ClothDetailsModel> GetClothDetails(int clothId)
+        {
+            return await repo.AllReadonly<Cloth>()
+                .Where(c => c.Id == clothId)
+                .Select(c => new ClothDetailsModel()
+                {
+                    Name = c.Name,
+                    Description = c.Description,
+                    Price = c.Price,
+                    Quantity = c.Quantity,
+                    ImageUrl = c.ImageUrl,
+                    GenderOrientation = c.GenderOrientation.ToString(),
+                }).FirstAsync();
         }
     }
 }

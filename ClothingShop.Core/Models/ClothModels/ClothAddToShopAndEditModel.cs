@@ -5,8 +5,10 @@ using static ClothingShop.Infrastructure.Data.DataConstants.Cloth;
 
 namespace ClothingShop.Core.Models.ClothModels
 {
-    public class ClothAddToShopModel
+    public class ClothAddToShopAndEditModel
     {
+        public int Id { get; set; } 
+
         [Required]
         [StringLength(NameMaxLength), MinLength(NameMinLength)]
         public string Name { get; set; } = null!;
@@ -22,9 +24,9 @@ namespace ClothingShop.Core.Models.ClothModels
         [Display(Name = "Image URL")]
         public string ImageUrl { get; set; } = null!;
 
-        [Range(QuantityMin, QuantityMax)]
+        [Range(QuantityMinAddAndEditModel, QuantityMax)]
         public int Quantity { get; set; }
-
+        
         public string GenderOrientation { get; set; } = null!;
 
         [Display(Name = "Category")]
