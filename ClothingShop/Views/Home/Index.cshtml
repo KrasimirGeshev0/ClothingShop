@@ -1,31 +1,27 @@
-﻿@{
-    ViewData["Title"] = "Home";
-}
-
-<div class="text-center">
-    <h1 class="display-4">Welcome to my Clothing Shop</h1>
-</div>
-@*@model IEnumerable<HouseIndexServiceModel>
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model HomePageModel
 
 @{
     ViewData["Title"] = "Home Page";
-    var clothes = Model.ToList();
+    var thumbnailCarousel = Model.HomePageCarousel.ToList();
+    var thumbnailGenderSections = Model.HomePageGenderSection.ToList();
+    var menSection = thumbnailGenderSections[0];
+    var womanSection = thumbnailGenderSections[1];
 }
 
 <div class="mb-5"></div>
 
 <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
     <div class="carousel-inner">
-        @for (int i = 0; i < clothes.Count(); i++)
+        @for (int i = 0; i < thumbnailCarousel.Count(); i++)
         {
-            var cloth = clothes[i];
+            var thumbnail = thumbnailCarousel[i];
             <div class="carousel-item @(i == 0 ? "active" : string.Empty)">
-                <img class="d-block w-100" style="height:500px"
-                     src="@cloth.ImageUrl" alt="@cloth.Title">
+                <img class="d-block w-100" style="height:650px"
+                     src="@thumbnail.ImageUrl" alt="Not sure Yet" title="@thumbnail.Title">
                 <div class="carousel-caption d-none d-md-block">
                     <h5>
-                        <a class="btn btn-primary" asp-controller="Houses" asp-action="Details"
-                           asp-route-id="@cloth.Id"> @cloth.Title</a>
+                        <a class="btn btn-primary" asp-controller="Cloth" asp-action="@thumbnail.ActionName">@thumbnail.Title</a>
                     </h5>
                 </div>
             </div>
@@ -40,4 +36,25 @@
         <span class="visually-hidden">Next</span>
     </button>
 </div>
-*@
+<div class="row" style="">
+    <div class="column" style="float: left; width: 50%; padding: 2px;">
+        <img src="@menSection.ImageUrl" alt="Men" style="width:100%">
+        <div class="card-img d-none d-md-block w-100" style="position: relative; top: 12%;" >
+            <h5>
+                <a class="btn btn-primary"  style="position: relative; left: 40%; top:100%;" asp-controller="Cloth" asp-action="@menSection.ActionName">@menSection.Title</a>
+            </h5>
+        </div>
+    </div>
+    <div class="column" style="float: left; width: 50%; padding: 5px;">
+        <img src="@womanSection.ImageUrl" alt="Women" style="width:100%">
+        <div class="card-img d-none d-md-block w-100" style="position: relative; top: -5%;" >
+            <h5>
+                <a class="btn btn-primary" style="position: relative; left: 40%;" asp-controller="Cloth" asp-action="@womanSection.ActionName">@womanSection.Title</a>
+            </h5>
+        </div>
+    </div>
+</div>
+
+
+
+

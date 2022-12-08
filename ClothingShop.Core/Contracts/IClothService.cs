@@ -37,6 +37,6 @@ namespace ClothingShop.Core.Contracts
         Task<int> GetClothBrandId(int clothId);
 
         Task<ClothDetailsModel> GetClothDetails(int clothId);
+
     }
 }
-    

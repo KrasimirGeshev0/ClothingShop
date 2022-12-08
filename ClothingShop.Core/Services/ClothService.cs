@@ -33,8 +33,9 @@ namespace ClothingShop.Core.Services
             if (string.IsNullOrEmpty(genderOrientation) == false)
             {
                 var parsedGO = Enum.Parse<ProductGenderOrient>(genderOrientation);
+                var unisex = Enum.Parse<ProductGenderOrient>("Unisex");
                 clothes = clothes
-                    .Where(c => c.GenderOrientation == parsedGO);
+                    .Where(c => c.GenderOrientation == parsedGO || c.GenderOrientation == unisex);
             }
 
             if (string.IsNullOrEmpty(searchTerm) == false)  

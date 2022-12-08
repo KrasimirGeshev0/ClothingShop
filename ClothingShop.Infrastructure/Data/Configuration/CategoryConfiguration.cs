@@ -33,6 +33,36 @@ namespace ClothingShop.Infrastructure.Data.Configuration
                 Name = "T-Shirts"
             });
 
+            categories.Add(new Category()
+            {
+                Id = 4,
+                Name = "Jeans"
+            });
+
+            categories.Add(new Category()
+            {
+                Id = 5,
+                Name = "Jeans"
+            });
+
+            categories.Add(new Category()
+            {
+                Id = 6,
+                Name = "Hats"
+            });
+
+            categories.Add(new Category()
+            {
+                Id = 7,
+                Name = "Shorts"
+            });
+
+            categories.Add(new Category()
+            {
+                Id = 8,
+                Name = "Trousers"
+            });
+
             return categories;
         }
     }

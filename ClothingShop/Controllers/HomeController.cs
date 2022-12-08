@@ -1,6 +1,8 @@
 ﻿using ClothingShop.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using ClothingShop.Core.ExternalData.HomePageExternal;
+using ClothingShop.Core.Models.HomeModels;
 
 namespace ClothingShop.Controllers
 {
@@ -8,7 +10,16 @@ namespace ClothingShop.Controllers
     {
         public IActionResult Index()
         {
-            return View();
+            var carouselModels = HomeCarouselSeed.SeedCarousel();   
+            var genderSectionModels = HomeGenderSectionsSeed.SeedGenderSections();
+            var model = new HomePageModel()
+            {
+                HomePageCarousel = carouselModels,
+                HomePageGenderSection = genderSectionModels
+            };
+
+            
+            return View(model);    
         }
 
 

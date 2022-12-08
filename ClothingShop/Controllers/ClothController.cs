@@ -34,6 +34,7 @@ namespace ClothingShop.Controllers
             return View(query);
         }
 
+
         [HttpGet]
         public async Task<IActionResult> Add()
         {
@@ -164,6 +165,37 @@ namespace ClothingShop.Controllers
         public async Task<IActionResult> AddToCart()
         {
             return null;
+        }
+        public IActionResult Jackets()
+        {
+            return RedirectToAction(nameof(All), new AllClothesQueryModel()
+            {
+                Category = "Jackets"
+            });
+        }
+
+        public IActionResult AllFromNike()
+        {
+            return RedirectToAction(nameof(All), new AllClothesQueryModel()
+            {
+                SearchTerm = "Nike"
+            });
+        }
+
+        public IActionResult MenClothes()
+        {
+            return RedirectToAction(nameof(All), new AllClothesQueryModel()
+            {
+                GenderOrientation = "Male"
+            });
+        }
+
+        public IActionResult WomenClothes()
+        {
+            return RedirectToAction(nameof(All), new AllClothesQueryModel()
+            {
+                GenderOrientation = "Female"
+            });
         }
 
     }

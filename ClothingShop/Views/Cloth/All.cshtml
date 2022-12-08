@@ -1,7 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
 @using ClothingShop.Models.Clothes
 @using ClothingShop.Infrastructure.Data.Enums
-@model ClothingShop.Models.Clothes.AllClothesQueryModel
+@model AllClothesQueryModel
 
 @{
     ViewBag.Title = "All Clothes";
@@ -30,8 +30,9 @@
                 <label asp-for="GenderOrientation"></label>
                 <select asp-for="GenderOrientation" class="form-control">
                     <option value="">All</option>
-                    @foreach (string name in Enum.GetNames(typeof(ProductGenderOrient)))
+                    @for (int i = 0; i < Enum.GetNames(typeof(ProductGenderOrient)).Length - 1; i++)
                     {
+                        var name = Enum.GetNames(typeof(ProductGenderOrient))[i];
                         <option value="@name">@name</option>
                     }
                 </select>
@@ -104,13 +105,13 @@
 
 @if (!Model.Clothes.Any())
 {
-    <h2 class="text-center">No houses found by the given criteria!</h2>
+    <h2 class="text-center">No clothes found by the given criteria!</h2>
 }
 
 <div class="row">
-    @foreach (var house in Model.Clothes)
+    @foreach (var cloth in Model.Clothes)
     {
-        <partial name="_ClothesPartial" model="@house" />
+        <partial name="_ClothesPartial" model="@cloth" />
     }
 </div>
 
