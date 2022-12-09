@@ -21,8 +21,10 @@ namespace ClothingShop.Core.Services
             int currentPage = 1, int clothesPerPage = 1)
         {
             var result = new ClothesQueryModel();
-            var availableClothes = await AllClothesWithEnoughQuantity();
-            var clothes = repo.AllReadonly<Cloth>().Where(c => availableClothes.Contains(c.Id) && c.IsAvailable);
+            var quantityChecker = await AllClothesWithEnoughQuantity();
+            var isBrandAvailable = await AllClothesWithAvailableBrand();
+
+            var clothes = repo.AllReadonly<Cloth>().Where(c => quantityChecker.Contains(c.Id) && c.IsAvailable && isBrandAvailable.Contains(c.Id)) ;
 
             if (string.IsNullOrEmpty(category) == false)
             {
@@ -91,6 +93,11 @@ namespace ClothingShop.Core.Services
                 .Where(c => c.Quantity > 0)
                 .Select(c => c.Id)
                 .ToListAsync();
+        }
+
+        public async Task<IEnumerable<int>> AllClothesWithAvailableBrand()
+        {
+            return await repo.AllReadonly<Cloth>().Where(c => c.Brand.IsAvailable).Select(c => c.Id).ToListAsync();
         }
 
         public async Task<IEnumerable<ClothesCategoryModel>> AllCategories()
@@ -207,6 +214,21 @@ namespace ClothingShop.Core.Services
                     ImageUrl = c.ImageUrl,
                     GenderOrientation = c.GenderOrientation.ToString(),
                 }).FirstAsync();
+        }
+
+        public async Task<IEnumerable<ClothesServiceModel>> AllClothesByBrandId(int brandId)
+        {
+            return await repo.AllReadonly<Cloth>()
+                .Where(c => c.BrandId == brandId && c.IsAvailable)
+                .Select(c => new ClothesServiceModel()
+                {
+                    Id = c.Id,
+                    Name = c.Name,
+                    ImageUrl = c.ImageUrl,
+                    Brand = c.Brand.Name,
+                    Price = c.Price,
+                    Category = c.Category.Name,
+                }).ToListAsync();
         }
     }
 }

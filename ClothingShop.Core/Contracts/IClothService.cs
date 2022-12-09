@@ -16,6 +16,7 @@ namespace ClothingShop.Core.Contracts
         Task<IEnumerable<string>> AllCategoriesNames();
 
         Task<IEnumerable<int>> AllClothesWithEnoughQuantity();
+        Task<IEnumerable<int>> AllClothesWithAvailableBrand();
 
         Task<IEnumerable<ClothesCategoryModel>> AllCategories();
         Task<IEnumerable<ClothesBrandModel>> AllBrands();
@@ -37,6 +38,8 @@ namespace ClothingShop.Core.Contracts
         Task<int> GetClothBrandId(int clothId);
 
         Task<ClothDetailsModel> GetClothDetails(int clothId);
+
+        Task<IEnumerable<ClothesServiceModel>> AllClothesByBrandId(int brandId);
 
     }
 }

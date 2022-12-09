@@ -15,6 +15,8 @@ namespace ClothingShop.Infrastructure.Data.Entities
         [Required] 
         public string Logo { get; set; } = null!;
 
+        public bool IsAvailable { get; set; } = true;
+
         public List<Cloth> Clothes { get; set; } = new List<Cloth>();
     }
 }

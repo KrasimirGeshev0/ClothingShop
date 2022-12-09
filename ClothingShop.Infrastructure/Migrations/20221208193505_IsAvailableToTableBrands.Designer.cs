@@ -4,6 +4,7 @@ using ClothingShop.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ClothingShop.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221208193505_IsAvailableToTableBrands")]
+    partial class IsAvailableToTableBrands
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -134,7 +136,7 @@ namespace ClothingShop.Infrastructure.Migrations
 
                     b.HasIndex("ClothId");
 
-                    b.ToTable("ApplicationUsersClothes", (string)null);
+                    b.ToTable("ApplicationUsersClothes");
                 });
 
             modelBuilder.Entity("ClothingShop.Infrastructure.Data.Entities.Brand", b =>
@@ -159,7 +161,7 @@ namespace ClothingShop.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Brands", (string)null);
+                    b.ToTable("Brands");
 
                     b.HasData(
                         new
@@ -200,7 +202,7 @@ namespace ClothingShop.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
 
                     b.HasData(
                         new
@@ -291,7 +293,7 @@ namespace ClothingShop.Infrastructure.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Clothes", (string)null);
+                    b.ToTable("Clothes");
 
                     b.HasData(
                         new
@@ -363,7 +365,7 @@ namespace ClothingShop.Infrastructure.Migrations
 
                     b.HasIndex("ApplicationUserId");
 
-                    b.ToTable("Sellers", (string)null);
+                    b.ToTable("Sellers");
 
                     b.HasData(
                         new

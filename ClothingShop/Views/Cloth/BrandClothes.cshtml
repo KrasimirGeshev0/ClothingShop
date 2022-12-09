@@ -1,0 +1,21 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model ClothesServiceBrandNameModel
+@{
+    var clothes = Model.Clothes.ToList();
+    ViewBag.Title = Model.BrandName;
+}
+
+<h2 class="text-center">@ViewBag.Title</h2>
+<hr/>
+
+@if (!clothes.Any())
+{
+    <h2 class="text-center">No clothes found by the given brand!</h2>
+}
+
+<div class="row">
+    @foreach (var cloth in clothes)
+    {
+        <partial name="_ClothesPartial" model="@cloth" />
+    }
+</div>

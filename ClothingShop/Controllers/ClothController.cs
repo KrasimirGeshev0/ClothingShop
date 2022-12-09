@@ -10,11 +10,13 @@ namespace ClothingShop.Controllers
     public class ClothController : Controller
     {
         private readonly IClothService clothService;
+        private readonly IBrandService brandService;
 
 
-        public ClothController(IClothService _clothService)
+        public ClothController(IClothService _clothService, IBrandService _brandService)
         {
             clothService = _clothService;
+            brandService = _brandService;
         }
 
         public async Task<IActionResult> All([FromQuery] AllClothesQueryModel query)
@@ -146,7 +148,6 @@ namespace ClothingShop.Controllers
         }
 
 
-        [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
             if (await clothService.IsClothAvailable(id))
@@ -198,5 +199,18 @@ namespace ClothingShop.Controllers
             });
         }
 
+        public async Task<IActionResult> BrandClothes(int id)
+        {
+           var clothes = await clothService.AllClothesByBrandId(id);
+           var brandName = await brandService.GetBrandNameById(id);
+
+           var model = new ClothesServiceBrandNameModel()
+           {
+               Clothes = clothes,
+               BrandName = brandName
+           };
+
+           return View(model);
+        }
     }
 }
