@@ -9,14 +9,17 @@ namespace ClothingShop.Core.Contracts
 {
     public interface IBrandService
     {
-        Task<IEnumerable<AllBrandsModel>> All(string? searchTerm = null,
-            int currentPage = 1, int brandsPerPage = 1);
+        Task<IEnumerable<AllBrandsModel>> All(string? searchTerm = null);
 
         Task<string> GetBrandNameById(int brandId);
 
         Task Delete(int brandId);
 
         Task<bool> IsBrandAvailable(int brandId);
+
+        Task Create(CreateBrandModel model);
+
+        Task<int> BrandsCount();
     }
 }   
         

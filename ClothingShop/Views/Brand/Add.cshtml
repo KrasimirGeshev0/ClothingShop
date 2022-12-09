@@ -1,0 +1,30 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model CreateBrandModel
+@{
+    ViewBag.Title = "Add Brand";
+}
+
+<h2 class="text-center">@ViewBag.Title</h2>
+<hr/>
+
+<br>
+<div class="row">
+    <div class="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
+        <form method="post">
+            <div class="form-group">
+                <label asp-for="Name"></label>
+                <input asp-for="Name" class="form-control" placeholder="The name of your precious product">
+                <span asp-validation-for="Name" class="small text-danger"></span>
+            </div>
+            <br>
+            <div class="form-group">
+                <label asp-for="Logo"></label>
+                <input asp-for="Logo" class="form-control" placeholder="Your fine URL here...">
+                <span asp-validation-for="Logo" class="small text-danger"></span>
+            </div>
+            <div class="text-center">
+                <input class="btn btn-primary mt-3" type="submit" value="Save" />
+            </div>
+        </form>
+    </div>
+</div>

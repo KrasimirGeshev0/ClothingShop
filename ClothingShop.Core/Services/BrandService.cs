@@ -19,8 +19,7 @@ namespace ClothingShop.Core.Services
         {
             repo = _repository;
         }
-        public async Task<IEnumerable<AllBrandsModel>> All(string? searchTerm = null,
-        int currentPage = 1, int brandsPerPage = 1)
+        public async Task<IEnumerable<AllBrandsModel>> All(string? searchTerm = null)
         {
             var result = new List<AllBrandsModel>();
             var brands = repo.AllReadonly<Brand>().Where(b => b.IsAvailable);
@@ -35,8 +34,6 @@ namespace ClothingShop.Core.Services
             }
 
             return await brands
-                .Skip((currentPage - 1) * brandsPerPage)
-                .Take(brandsPerPage)
                 .Select(b => new AllBrandsModel()
                 {
                     Id = b.Id,
@@ -76,6 +73,23 @@ namespace ClothingShop.Core.Services
 
             return false;
 
+        }
+
+        public async Task Create(CreateBrandModel model)
+        {
+            var brand = new Brand()
+            {
+                Name = model.Name,
+                Logo = model.Logo,
+            };
+
+           await repo.AddAsync(brand);
+           await repo.SaveChangesAsync();
+        }
+
+        public async Task<int> BrandsCount()
+        {
+           return await repo.All<Brand>().CountAsync();
         }
     }
 }

@@ -1,14 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using static ClothingShop.Infrastructure.Data.DataConstants.Seller;
 
-namespace ClothingShop.Infrastructure.Data.Entities
+namespace ClothingShop.Core.Models.SellerModels
 {
-    public class Seller
+    public class CreateSellerModel
     {
-        [Key]
-        public int Id { get; set; }
-
         [MaxLength(FirstNameMaxLength)]
         public string? FirstName { get; set; } = null!;
 
@@ -17,11 +13,5 @@ namespace ClothingShop.Infrastructure.Data.Entities
         [Required]
         [MaxLength]
         public string PhoneNumber { get; set; } = null!;
-
-        [Required]
-        [ForeignKey(nameof(ApplicationUser))]
-        public string ApplicationUserId { get; set; } = null!;
-
-        public ApplicationUser ApplicationUser { get; set; } = null!;
     }
 }

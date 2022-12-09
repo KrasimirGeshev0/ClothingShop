@@ -9,10 +9,6 @@ namespace ClothingShop.Models.Brands
         [Display(Name = "")]
         public string? SearchTerm { get; set; }
 
-        public int CurrentPage { get; set; } = 1;
-
-        public const int BrandsPerPage = 3;
-
         public IEnumerable<AllBrandsModel> Brands { get; set; } = new List<AllBrandsModel>();
     }
 }
