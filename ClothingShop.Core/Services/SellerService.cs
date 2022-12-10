@@ -15,18 +15,20 @@ namespace ClothingShop.Core.Services
             repo = _repo;
         }
 
-        public async Task Create(CreateSellerModel model)
+        public async Task Create(CreateSellerModel model, string userId)
         {
             var seller = new Seller()
             {
                 FirstName = model.FirstName,
                 LastName = model.LastName,
                 PhoneNumber = model.PhoneNumber,
+                ApplicationUserId = userId
             };
 
             await repo.AddAsync(seller);
             await repo.SaveChangesAsync();
         }
+
 
         public async Task<bool> ExistsById(string sellerId)
         {

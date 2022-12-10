@@ -48,12 +48,12 @@ namespace ClothingShop.Controllers
 
             if (await sellerService.UserWithPhoneNumExistsById(model.PhoneNumber))
             {
-                TempData[MessageConstant.ErrorMessage] = "Sller with this phone number already exists!";
+                //TempData[MessageConstant.ErrorMessage] = "Seller with this phone number already exists!";
 
                 return RedirectToAction("Index", "Home");
             }
 
-            await sellerService.Create(model);
+            await sellerService.Create(model, userId);
 
             return RedirectToAction("All", "Cloth");
         }

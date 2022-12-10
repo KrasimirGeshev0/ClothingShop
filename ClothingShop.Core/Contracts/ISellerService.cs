@@ -4,7 +4,7 @@ namespace ClothingShop.Core.Contracts
 {
     public interface ISellerService
     {
-        Task Create(CreateSellerModel model);
+        Task Create(CreateSellerModel model, string userId);
 
         Task<bool> ExistsById(string userId);
 

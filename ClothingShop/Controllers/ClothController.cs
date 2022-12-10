@@ -1,5 +1,6 @@
 ﻿using ClothingShop.Core.Contracts;
 using ClothingShop.Core.Models.ClothModels;
+using ClothingShop.Extensions;
 using ClothingShop.Models.Clothes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,12 +12,13 @@ namespace ClothingShop.Controllers
     {
         private readonly IClothService clothService;
         private readonly IBrandService brandService;
+        private readonly ISellerService sellerService;
 
-
-        public ClothController(IClothService _clothService, IBrandService _brandService)
+        public ClothController(IClothService _clothService, IBrandService _brandService, ISellerService _sellerService)
         {
             clothService = _clothService;
             brandService = _brandService;
+            sellerService = _sellerService;
         }
 
         public async Task<IActionResult> All([FromQuery] AllClothesQueryModel query)
@@ -40,6 +42,11 @@ namespace ClothingShop.Controllers
         [HttpGet]
         public async Task<IActionResult> Add()
         {
+            if ((await sellerService.ExistsById(User.Id())) == false)
+            {
+                return RedirectToAction(nameof(SellerController.Become), "Seller");
+            }
+
             var model = new ClothAddToShopAndEditModel()
             {
                 Categories = await clothService.AllCategories(),
@@ -56,6 +63,11 @@ namespace ClothingShop.Controllers
                 model.Categories = await clothService.AllCategories();
                 model.Brands = await clothService.AllBrands();
                 return View(model);
+            }
+
+            if ((await sellerService.ExistsById(User.Id())) == false)
+            {
+                return RedirectToAction(nameof(SellerController.Become), "Seller");
             }
 
             if (await clothService.CategoryExists(model.CategoryId) == false)
