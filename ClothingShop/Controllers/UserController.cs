@@ -1,4 +1,5 @@
-﻿using ClothingShop.Infrastructure.Data.Entities;
+﻿using ClothingShop.Core.Contracts;
+using ClothingShop.Infrastructure.Data.Entities;
 using ClothingShop.Models.UI;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -12,13 +13,16 @@ namespace ClothingShop.Controllers
 
         private UserManager<ApplicationUser> userManager;
         private SignInManager<ApplicationUser> signInManager;
+        private readonly IAppUserService appUserService;
 
         public UserController(
             UserManager<ApplicationUser> _userManager,
-            SignInManager<ApplicationUser> _signInManager)
+            SignInManager<ApplicationUser> _signInManager,
+            IAppUserService _appUserService)
         {
             userManager = _userManager;
             signInManager = _signInManager;
+            appUserService = _appUserService;
         }
 
         [HttpGet]
@@ -41,6 +45,14 @@ namespace ClothingShop.Controllers
             if (!ModelState.IsValid)
             {
                 return View(model);
+            }
+
+            if (await appUserService.UserWithEmailExists(model.Email))
+            {
+                ModelState.AddModelError(String.Empty, "Email already exists");
+
+                return View(model);
+
             }
 
             var user = new ApplicationUser()

@@ -12,6 +12,7 @@ namespace ClothingShop.Extensions
             services.AddScoped<IClothService, ClothService>();
             services.AddScoped<IBrandService, BrandService>();
             services.AddScoped<ISellerService, SellerService>();
+            services.AddScoped<IAppUserService, AppUserService>();
             
             return services;
         }
