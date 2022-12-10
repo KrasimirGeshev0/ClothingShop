@@ -1,4 +1,5 @@
 ﻿using ClothingShop.Core.Contracts;
+using ClothingShop.Core.Models;
 using ClothingShop.Core.Models.ClothModels;
 using ClothingShop.Infrastructure.Data.Common;
 using ClothingShop.Infrastructure.Data.Entities;
@@ -10,21 +11,23 @@ namespace ClothingShop.Core.Services
     public class ClothService : IClothService
     {
         private readonly IRepository repo;
+        private readonly ISellerService sellerService;
 
-        public ClothService(IRepository _repository)
+        public ClothService(IRepository _repository, ISellerService _sellerService)
         {
             repo = _repository;
+            sellerService = _sellerService;
         }
 
 
-        public async Task<ClothesQueryModel> All(ClothesSorting sorting = ClothesSorting.Newest, string? category = null,string? genderOrientation = null, string? searchTerm = null,
+        public async Task<ClothesQueryModel> All(ClothesSorting sorting = ClothesSorting.Newest, string? category = null, string? genderOrientation = null, string? searchTerm = null,
             int currentPage = 1, int clothesPerPage = 1)
         {
             var result = new ClothesQueryModel();
             var quantityChecker = await AllClothesWithEnoughQuantity();
             var isBrandAvailable = await AllClothesWithAvailableBrand();
 
-            var clothes = repo.AllReadonly<Cloth>().Where(c => quantityChecker.Contains(c.Id) && c.IsAvailable && isBrandAvailable.Contains(c.Id)) ;
+            var clothes = repo.AllReadonly<Cloth>().Where(c => quantityChecker.Contains(c.Id) && c.IsAvailable && isBrandAvailable.Contains(c.Id));
 
             if (string.IsNullOrEmpty(category) == false)
             {
@@ -40,7 +43,7 @@ namespace ClothingShop.Core.Services
                     .Where(c => c.GenderOrientation == parsedGO || c.GenderOrientation == unisex);
             }
 
-            if (string.IsNullOrEmpty(searchTerm) == false)  
+            if (string.IsNullOrEmpty(searchTerm) == false)
             {
                 searchTerm = $"%{searchTerm.ToLower()}%";
 
@@ -60,6 +63,8 @@ namespace ClothingShop.Core.Services
                 ClothesSorting.Newest => clothes.OrderByDescending(h => h.Id)
             };
 
+
+
             result.Clothes = await clothes
                 .Skip((currentPage - 1) * clothesPerPage)
                 .Take(clothesPerPage)
@@ -71,8 +76,14 @@ namespace ClothingShop.Core.Services
                     Name = c.Name,
                     Category = c.Category.Name,
                     Brand = c.Brand.Name,
+                    SellerId = c.SellerId,
                 })
                 .ToListAsync();
+
+            foreach (var cloth in result.Clothes)
+            {
+                cloth.SellerName = await sellerService.GetSellerNameById(cloth.SellerId);
+            }
 
             result.TotalClothesCount = await clothes.CountAsync();
 
@@ -144,7 +155,7 @@ namespace ClothingShop.Core.Services
 
         }
 
-        public async Task Create(ClothAddToShopAndEditModel model)  
+        public async Task Create(ClothAddToShopAndEditModel model, int sellerId)
         {
             var cloth = new Cloth()
             {
@@ -156,6 +167,7 @@ namespace ClothingShop.Core.Services
                 BrandId = model.BrandId,
                 GenderOrientation = Enum.Parse<ProductGenderOrient>(model.GenderOrientation),
                 CategoryId = model.CategoryId,
+                SellerId = sellerId
             };
 
             await repo.AddAsync(cloth);
@@ -229,6 +241,54 @@ namespace ClothingShop.Core.Services
                     Price = c.Price,
                     Category = c.Category.Name,
                 }).ToListAsync();
+        }
+
+        public async Task<IEnumerable<ClothesServiceModel>> AllClothesBySellerId(int sellerId)
+        {
+            return await repo.AllReadonly<Cloth>().Where(c => c.SellerId == sellerId && c.IsAvailable).Select(c => new ClothesServiceModel()
+            {
+                Id = c.Id,
+                Name = c.Name,
+                ImageUrl = c.ImageUrl,
+                Brand = c.Brand.Name,
+                Price = c.Price,
+                Category = c.Category.Name,
+            }).ToListAsync();
+        }
+
+        public async Task AddClothToUsersCart(int clothId, string userId)
+        {
+            var clothToUser = new ApplicationUserCloth()
+            {
+                ClothId = clothId,
+                ApplicationUserId = userId
+            };
+
+            await repo.AddAsync(clothToUser);
+            await repo.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<ClothesServiceModel>> UserCartClothes(string userId)
+        {
+            return await repo.AllReadonly<ApplicationUserCloth>().Where(auc => auc.ApplicationUserId == userId && auc.Cloth.IsAvailable)
+                .Select(c => new ClothesServiceModel()
+                {
+                    Id = c.ClothId,
+                    Name = c.Cloth.Name,
+                    ImageUrl = c.Cloth.ImageUrl,
+                    Brand = c.Cloth.Brand.Name,
+                    Price = c.Cloth.Price,
+                    Category = c.Cloth.Category.Name,
+                }).ToListAsync();
+        }
+
+        public async Task RemoveClothFromUserCart(int clothId, string userId)
+        {
+           var itemToRemove = await repo.All<ApplicationUserCloth>()
+                .FirstAsync(auc => auc.ApplicationUserId == userId && auc.ClothId == clothId);
+           
+           repo.Delete(itemToRemove);
+           await repo.SaveChangesAsync();
         }
     }
 }

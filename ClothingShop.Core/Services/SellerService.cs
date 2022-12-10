@@ -39,5 +39,19 @@ namespace ClothingShop.Core.Services
         {
             return await repo.AllReadonly<Seller>().AnyAsync(s => s.PhoneNumber == phoneNumber);
         }
+
+        public async Task<int> GetSellerId(string userId)
+        {
+            return (await repo.AllReadonly<Seller>()
+                .FirstOrDefaultAsync(a => a.ApplicationUserId == userId))?.Id ?? 0;
+        }
+
+        public async Task<string> GetSellerNameById(int sellerId)
+        {
+            var firstName = (await repo.GetByIdAsync<Seller>(sellerId)).FirstName;
+            var lastName = (await repo.GetByIdAsync<Seller>(sellerId)).LastName;
+
+            return firstName +" "+ lastName;
+        }
     }
 }

@@ -25,7 +25,7 @@ namespace ClothingShop.Core.ExternalData.HomePageExternal
 
             model = new HomeModel()
             {
-                Title = "Best of Nike",
+                Title = "All From Nike",
                 ImageUrl = "https://www.gridsu.com/wp-content/uploads/2020/10/5d49924e100a241a884446cc.jpg",
                 ActionName = "AllFromNike"
             };

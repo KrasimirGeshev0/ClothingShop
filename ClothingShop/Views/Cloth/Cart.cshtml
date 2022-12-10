@@ -1,0 +1,58 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model ClothesCartModel
+@{
+    var clothes = Model.Clothes.ToList();
+    ViewBag.Title = "Cart";
+}
+
+<h2 class="text-center">@ViewBag.Title</h2>
+<hr/>
+
+@if (!clothes.Any())
+{
+    <div class="mt-4 p-5 bg-light">
+        <p class="lead">
+            Your cart is empty.
+            Please add atleast one product.
+        </p>
+        <hr class="my-4">
+        <p class="lead">
+            @if (this.User.Identity.IsAuthenticated)
+            {
+                <a asp-controller="Cloth" asp-action="All" class="btn btn-primary btn-lg"
+                   role="button">View all clothes</a>
+            }
+        </p>
+    </div>
+}
+
+
+<div class="row">
+    @foreach (var cloth in clothes)
+    {
+        <div class="col-md-4">
+            <div class="card mb-3">
+                <img class="card-img-top" src="@cloth.ImageUrl" alt="House Image">
+                <div class="card-body text-center">
+                    <h4>@cloth.Name</h4>
+                    <h5>
+                        Price:
+                        <b>@String.Format("{0:f2}", cloth.Price) BGN</b>
+                    </h5>
+                    <h6>
+                        Brand:
+                        <b>@cloth.Brand</b>
+                
+                    </h6>
+                    <br />
+                    @if (this.User.Identity.IsAuthenticated)
+                    {
+                        <a asp-controller="Cloth" asp-action="RemoveFromCart" asp-route-id="@cloth.Id"
+                           class="btn btn-danger">Remove from cart</a>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<div id="bottom"><h4>Total Price: <b>@String.Format("{0:f2}", Model.TotalPrice) BGN</b></h4><hr></div>

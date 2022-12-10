@@ -27,7 +27,7 @@ namespace ClothingShop.Core.Contracts
 
         Task<bool> IsClothAvailable(int clothId);
 
-        Task Create(ClothAddToShopAndEditModel model); 
+        Task Create(ClothAddToShopAndEditModel model, int sellerId); 
 
         Task Delete(int clothId);
 
@@ -40,6 +40,14 @@ namespace ClothingShop.Core.Contracts
         Task<ClothDetailsModel> GetClothDetails(int clothId);
 
         Task<IEnumerable<ClothesServiceModel>> AllClothesByBrandId(int brandId);
+
+        Task<IEnumerable<ClothesServiceModel>> AllClothesBySellerId(int sellerId);
+
+        Task AddClothToUsersCart(int clothId, string userId);
+
+        Task<IEnumerable<ClothesServiceModel>> UserCartClothes(string userId);
+
+        Task RemoveClothFromUserCart(int clothId, string userId);
 
     }
 }

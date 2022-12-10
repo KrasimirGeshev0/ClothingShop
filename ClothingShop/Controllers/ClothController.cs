@@ -80,7 +80,8 @@ namespace ClothingShop.Controllers
                 ModelState.AddModelError(nameof(model.BrandId), "Brand does not exists");
             }
 
-            await clothService.Create(model);
+            var sellerId = await sellerService.GetSellerId(User.Id());
+            await clothService.Create(model, sellerId);
 
             return RedirectToAction(nameof(All), new AllClothesQueryModel()
             {
@@ -97,6 +98,11 @@ namespace ClothingShop.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int id)    
         {
+            if ((await sellerService.ExistsById(User.Id())) == false)
+            {
+                return RedirectToAction(nameof(SellerController.Become), "Seller");
+            }
+
             if (await clothService.IsClothAvailable(id) == false)
             {
                 return RedirectToAction(nameof(All));
@@ -128,6 +134,11 @@ namespace ClothingShop.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(ClothAddToShopAndEditModel model)
         {
+            if ((await sellerService.ExistsById(User.Id())) == false)
+            {
+                return RedirectToAction(nameof(SellerController.Become), "Seller");
+            }
+
             if (await clothService.IsClothAvailable(model.Id) == false)
             {
                 ModelState.AddModelError("", "Cloth does not exist");
@@ -174,11 +185,6 @@ namespace ClothingShop.Controllers
             return RedirectToAction(nameof(All));
         }
 
-        //TODO Implement
-        public async Task<IActionResult> AddToCart()
-        {
-            return null;
-        }
         public IActionResult Jackets()
         {
             return RedirectToAction(nameof(All), new AllClothesQueryModel()
@@ -189,9 +195,9 @@ namespace ClothingShop.Controllers
 
         public IActionResult AllFromNike()
         {
-            return RedirectToAction(nameof(All), new AllClothesQueryModel()
+            return RedirectToAction(nameof(BrandClothes), new
             {
-                SearchTerm = "Nike"
+                id = 2
             });
         }
 
@@ -223,6 +229,50 @@ namespace ClothingShop.Controllers
            };
 
            return View(model);
+        }
+
+        public async Task<IActionResult> Mine()
+        {
+            if ((await sellerService.ExistsById(User.Id())) == false)
+            {
+                return RedirectToAction(nameof(SellerController.Become), "Seller");
+            }
+
+            var sellerId = await sellerService.GetSellerId(User.Id());
+            var model = await clothService.AllClothesBySellerId(sellerId);
+
+            return View(model);
+        }
+
+        public async Task<IActionResult> AddToCart(int id)
+        {
+            var userId = User.Id();
+
+            await clothService.AddClothToUsersCart(id, userId);
+
+            return RedirectToAction("All");
+        }
+
+        public async Task<IActionResult> Cart()
+        {
+            var userId = User.Id();
+
+            var model = new ClothesCartModel
+            {
+                Clothes = await clothService.UserCartClothes(User.Id())
+            };
+            model.TotalPrice = model.Clothes.Select(c => c.Price).Sum();
+
+            return View(model);
+        }
+
+        public async Task<IActionResult> RemoveFromCart(int id)
+        {
+            var userId = User.Id();
+
+            await clothService.RemoveClothFromUserCart(id, userId);
+
+            return RedirectToAction("Cart");
         }
     }
 }

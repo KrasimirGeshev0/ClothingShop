@@ -16,3 +16,9 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+#bottom {
+    position: absolute;
+    bottom: 7%;
+    left: 45%;
+}

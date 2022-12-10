@@ -35,6 +35,8 @@ namespace ClothingShop.Core.Models.ClothModels
         [Display(Name = "Brand")]
         public int BrandId { get; set; }
 
+        public int SellerId { get; set; }
+
         public IEnumerable<ClothesCategoryModel> Categories { get; set; } = new List<ClothesCategoryModel>();
 
         public IEnumerable<ClothesBrandModel> Brands { get; set; } = new List<ClothesBrandModel>();

@@ -33,12 +33,13 @@ namespace ClothingShop.Infrastructure.Data.Entities
 
         [ForeignKey(nameof(Brand))]
         public int BrandId { get; set; }
-            
         public Brand Brand { get; set; } = null!;
 
         [ForeignKey(nameof(Category))]  
         public int CategoryId { get; set; }
         public Category Category { get; set; } = null!;
+
+        public int SellerId { get; set; }
 
         public List<ApplicationUserCloth> ProductApplicationUsers { get; set; } = new List<ApplicationUserCloth>();
 

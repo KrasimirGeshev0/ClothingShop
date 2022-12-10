@@ -9,5 +9,9 @@ namespace ClothingShop.Core.Contracts
         Task<bool> ExistsById(string userId);
 
         Task<bool> UserWithPhoneNumExistsById(string userId);
+
+        Task<int> GetSellerId(string userId);
+
+        Task<string> GetSellerNameById(int sellerId);
     }
 }

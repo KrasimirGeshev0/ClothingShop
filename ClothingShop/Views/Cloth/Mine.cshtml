@@ -1,0 +1,61 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model IEnumerable<ClothesServiceModel>
+@{
+    var clothes = Model.ToList();
+    ViewBag.Title = "Your clothes for sell";
+}
+
+<h2 class="text-center">@ViewBag.Title</h2>
+<hr/>
+
+@if (!clothes.Any())
+{
+    <div class="mt-4 p-5 bg-light">
+        <p class="lead">
+            You don't have any clothes for selling.
+            Why don't you add one.
+        </p>
+        <hr class="my-4">
+        <p class="lead">
+            @if (this.User.Identity.IsAuthenticated)
+            {
+                <a asp-controller="Cloth" asp-action="Add" class="btn btn-primary btn-lg"
+                   role="button">Add Cloth</a>
+            }
+        </p>
+    </div>
+}
+
+
+<div class="row">
+    @foreach (var cloth in clothes)
+    {
+        <div class="col-md-4">
+            <div class="card mb-3">
+                <img class="card-img-top" src="@cloth.ImageUrl" alt="House Image">
+                <div class="card-body text-center">
+                    <h4>@cloth.Name</h4>
+                    <h5>
+                        Price:
+                        <b>@String.Format("{0:f2}", cloth.Price) BGN</b>
+                    </h5>
+                    <h6>
+                        Brand:
+                        <b>@cloth.Brand</b>
+                
+                    </h6>
+                    <br />
+                    <a asp-controller="Cloth" asp-action="Details" asp-route-id="@cloth.Id"
+                       class="btn btn-success">Details</a>
+                    @if (this.User.Identity.IsAuthenticated)
+                    {
+                        <a asp-controller="Cloth" asp-action="Edit" asp-route-id="@cloth.Id"
+                           class="btn btn-warning">Edit</a>
+                        <a asp-controller="Cloth" asp-action="Delete" asp-route-id="@cloth.Id"
+                           class="btn btn-danger">Delete</a>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>

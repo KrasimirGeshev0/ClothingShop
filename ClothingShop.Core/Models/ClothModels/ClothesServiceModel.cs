@@ -17,5 +17,10 @@ namespace ClothingShop.Core.Models.ClothModels
 
         public string Brand { get; set; } = null!;
 
+        public int SellerId { get; set; }
+
+        [Display(Name = "Seller Name")] 
+        public string SellerName { get; set; } = null!;
+
     }
 }
