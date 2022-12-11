@@ -49,5 +49,8 @@ namespace ClothingShop.Core.Contracts
 
         Task RemoveClothFromUserCart(int clothId, string userId);
 
+        Task<ClothDetailsModel> ClothDetails(int clothId);
+
+
     }
 }

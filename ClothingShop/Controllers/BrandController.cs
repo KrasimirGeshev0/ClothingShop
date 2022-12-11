@@ -1,10 +1,12 @@
 ﻿using ClothingShop.Core.Contracts;
 using ClothingShop.Core.Models.BrandModels;
 using ClothingShop.Models.Brands;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ClothingShop.Controllers
 {
+    [Authorize]
     public class BrandController : Controller
     {
         private readonly IBrandService brandService;
@@ -14,6 +16,7 @@ namespace ClothingShop.Controllers
             brandService = _brandService;
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> All([FromQuery] AllBrandsQueryModel query)
         {
             var result = await brandService.All(

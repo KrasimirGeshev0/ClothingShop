@@ -8,14 +8,14 @@
         <div class="card-body text-center">
             <h4>@Model.Name</h4>
             <br />
+            <form class="input-group-sm" asp-controller="Cloth"
+                  asp-action="BrandClothes" asp-route-id="@Model.Id" method="post">
+                <h4>
+                    <input class="btn btn-primary mb-3" type="submit" value="View all clothes" />
+                </h4>
+            </form>
             @if (this.User.Identity.IsAuthenticated) //TODO Only Seller Should be able to access this tab
             {
-                <form class="input-group-sm" asp-controller="Cloth"
-                      asp-action="BrandClothes" asp-route-id="@Model.Id" method="post">
-                    <h4>
-                        <input class="btn btn-primary mb-3" type="submit" value="View all clothes" />
-                    </h4>
-                </form>
                 <a asp-controller="Brand" asp-action="Delete" asp-route-id="@Model.Id"
                    class="btn btn-danger">Delete</a>
             }

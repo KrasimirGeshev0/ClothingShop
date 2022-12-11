@@ -290,5 +290,29 @@ namespace ClothingShop.Core.Services
            repo.Delete(itemToRemove);
            await repo.SaveChangesAsync();
         }
+
+        public async Task<ClothDetailsModel> ClothDetails(int clothId)
+        {
+            var cloth = await repo.AllReadonly<Cloth>()
+                .Where(c => c.Id == clothId)
+                .Select(c => new ClothDetailsModel()
+                {
+                    Id = c.Id,
+                    Name = c.Name,
+                    Price = c.Price,
+                    ImageUrl = c.ImageUrl,
+                    Description = c.Description,
+                    Quantity = c.Quantity,
+                    Brand = c.Brand.Name,
+                    Category = c.Category.Name,
+                    SellerId = c.SellerId,
+                    GenderOrientation = c.GenderOrientation.ToString()
+                }).FirstAsync();
+            
+                cloth.SellerName = await sellerService.GetSellerNameById(cloth.SellerId);
+                cloth.SellerPhoneNumber = await sellerService.GetSellerPhoneById(cloth.SellerId);
+            
+                return cloth;
+        }
     }
 }

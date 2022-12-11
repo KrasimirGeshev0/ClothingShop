@@ -53,5 +53,12 @@ namespace ClothingShop.Core.Services
 
             return firstName +" "+ lastName;
         }
+
+        public async Task<string> GetSellerPhoneById(int sellerId)
+        {
+            var phoneNumber = (await repo.GetByIdAsync<Seller>(sellerId)).PhoneNumber;
+
+            return phoneNumber;
+        }
     }
 }

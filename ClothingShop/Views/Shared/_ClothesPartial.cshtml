@@ -13,23 +13,26 @@
             <h6>
                 Brand:
                 <b>@Model.Brand</b>
-                
+
             </h6>
             <br />
             <a asp-controller="Cloth" asp-action="Details" asp-route-id="@Model.Id"
                class="btn btn-success">Details</a>
-            @if (this.User.Identity.IsAuthenticated) //TODO Only Seller Should be able to access this tab 
-            {
-                //TODO Add Brand name to the product 
-                <a asp-controller="Cloth" asp-action="Edit" asp-route-id="@Model.Id"
-                   class="btn btn-warning">Edit</a>
-                <a asp-controller="Cloth" asp-action="Delete" asp-route-id="@Model.Id"
-                   class="btn btn-danger">Delete</a>
-                <p></p>
+            <p>
                 <form class="input-group-sm" asp-controller="Cloth"
-                          asp-action="AddToCart" asp-route-id="@Model.Id" method="post">
+                      asp-action="AddToCart" asp-route-id="@Model.Id" method="post">
                     <input class="btn btn-primary" type="submit" value="Add to Cart" />
                 </form>
+            </p>
+            @if (this.User.Identity.IsAuthenticated) //TODO Only Seller Should be able to access this tab
+            {
+                //TODO Add Brand name to the product
+                <a asp-controller="Cloth" asp-action="Edit" asp-route-id="@Model.Id"
+               class="btn btn-warning">Edit</a>
+                <a asp-controller="Cloth" asp-action="Delete" asp-route-id="@Model.Id"
+               class="btn btn-danger">Delete</a>
+                <p></p>
+
             }
         </div>
     </div>

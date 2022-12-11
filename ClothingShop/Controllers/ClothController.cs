@@ -21,6 +21,7 @@ namespace ClothingShop.Controllers
             sellerService = _sellerService;
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> All([FromQuery] AllClothesQueryModel query)
         {
             var result = await clothService.All(
@@ -89,12 +90,6 @@ namespace ClothingShop.Controllers
             });
         }
 
-        //TODO Implement method Details
-        public async Task<IActionResult> Details()
-        {
-            return null;
-        }
-
         [HttpGet]
         public async Task<IActionResult> Edit(int id)    
         {
@@ -130,7 +125,6 @@ namespace ClothingShop.Controllers
             return View(model);
         }
 
-        //TODO Edit post method
         [HttpPost]
         public async Task<IActionResult> Edit(ClothAddToShopAndEditModel model)
         {
@@ -185,6 +179,7 @@ namespace ClothingShop.Controllers
             return RedirectToAction(nameof(All));
         }
 
+        [AllowAnonymous]
         public IActionResult Jackets()
         {
             return RedirectToAction(nameof(All), new AllClothesQueryModel()
@@ -193,6 +188,7 @@ namespace ClothingShop.Controllers
             });
         }
 
+        [AllowAnonymous]
         public IActionResult AllFromNike()
         {
             return RedirectToAction(nameof(BrandClothes), new
@@ -201,6 +197,7 @@ namespace ClothingShop.Controllers
             });
         }
 
+        [AllowAnonymous]
         public IActionResult MenClothes()
         {
             return RedirectToAction(nameof(All), new AllClothesQueryModel()
@@ -209,6 +206,7 @@ namespace ClothingShop.Controllers
             });
         }
 
+        [AllowAnonymous]
         public IActionResult WomenClothes()
         {
             return RedirectToAction(nameof(All), new AllClothesQueryModel()
@@ -217,6 +215,7 @@ namespace ClothingShop.Controllers
             });
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> BrandClothes(int id)
         {
            var clothes = await clothService.AllClothesByBrandId(id);
@@ -250,7 +249,7 @@ namespace ClothingShop.Controllers
 
             await clothService.AddClothToUsersCart(id, userId);
 
-            return RedirectToAction("All");
+            return StatusCode(204);
         }
 
         public async Task<IActionResult> Cart()
@@ -273,6 +272,19 @@ namespace ClothingShop.Controllers
             await clothService.RemoveClothFromUserCart(id, userId);
 
             return RedirectToAction("Cart");
+        }
+
+        [AllowAnonymous]
+        public async Task<IActionResult> Details(int id)
+        {
+            if (await clothService.IsClothAvailable(id) == false)
+            {
+                return BadRequest();
+            }
+
+            var model = await clothService.ClothDetails(id);
+
+            return View(model);
         }
     }
 }

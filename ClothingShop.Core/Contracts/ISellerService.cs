@@ -13,5 +13,7 @@ namespace ClothingShop.Core.Contracts
         Task<int> GetSellerId(string userId);
 
         Task<string> GetSellerNameById(int sellerId);
+
+        Task<string> GetSellerPhoneById(int sellerId);
     }
 }
