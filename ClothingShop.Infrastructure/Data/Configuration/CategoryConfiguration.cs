@@ -41,25 +41,13 @@ namespace ClothingShop.Infrastructure.Data.Configuration
 
             categories.Add(new Category()
             {
-                Id = 5,
-                Name = "Jeans"
-            });
-
-            categories.Add(new Category()
-            {
                 Id = 6,
-                Name = "Hats"
-            });
-
-            categories.Add(new Category()
-            {
-                Id = 7,
                 Name = "Shorts"
             });
 
             categories.Add(new Category()
             {
-                Id = 8,
+                Id = 7,
                 Name = "Trousers"
             });
 

@@ -45,6 +45,20 @@ namespace ClothingShop.Infrastructure.Data.Configuration
 
             users.Add(user);
 
+            user = new ApplicationUser()
+            {
+                Id = "415f0424-de60-4ffe-a988-e267825ed52c",
+                UserName = "Admin",
+                NormalizedUserName = "ADMIN",
+                Email = "admin@mail.com",
+                NormalizedEmail = "ADMIN@MAIL.COM"
+            };
+
+            user.PasswordHash =
+                hasher.HashPassword(user, "admin123");
+
+            users.Add(user);
+
             return users;
         }
 
