@@ -26,7 +26,8 @@ namespace ClothingShop.Infrastructure.Data.Configuration
                 GenderOrientation = ProductGenderOrient.Male,
                 Quantity = 2,
                 BrandId = 1,
-                CategoryId = 1
+                CategoryId = 1,
+                SellerId = 1
             };
 
             clothes.Add(cloth);
@@ -41,8 +42,9 @@ namespace ClothingShop.Infrastructure.Data.Configuration
                 GenderOrientation = ProductGenderOrient.Unisex,
                 Quantity = 10,
                 BrandId = 2,
-                CategoryId = 1
-            };
+                CategoryId = 1,
+                SellerId = 1
+           };
 
            clothes.Add(cloth);
 
@@ -56,7 +58,8 @@ namespace ClothingShop.Infrastructure.Data.Configuration
                GenderOrientation = ProductGenderOrient.Male,
                Quantity = 5,
                BrandId = 3,
-               CategoryId = 3
+               CategoryId = 3,
+               SellerId = 1
            };
 
            clothes.Add(cloth);
