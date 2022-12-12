@@ -314,5 +314,13 @@ namespace ClothingShop.Core.Services
             
                 return cloth;
         }
+
+        public async Task<bool> IsTheClothSeller(int clothId, string userId)
+        {
+            var sellerId = await sellerService.GetSellerId(userId);
+            var currentClothSeller = (await repo.GetByIdAsync<Cloth>(clothId)).SellerId;
+
+            return sellerId == currentClothSeller;
+        }
     }
 }

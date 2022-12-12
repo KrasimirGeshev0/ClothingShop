@@ -51,6 +51,6 @@ namespace ClothingShop.Core.Contracts
 
         Task<ClothDetailsModel> ClothDetails(int clothId);
 
-
+        Task<bool> IsTheClothSeller(int clothId, string userId);
     }
-}
+}   

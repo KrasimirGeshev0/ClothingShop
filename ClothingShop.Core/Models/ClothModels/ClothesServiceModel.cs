@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using ClothingShop.Core.Contracts;
 
 namespace ClothingShop.Core.Models.ClothModels
 {
-    public class ClothesServiceModel
+    public class ClothesServiceModel : IClothModel
     {
         public int Id { get; init; }
 
