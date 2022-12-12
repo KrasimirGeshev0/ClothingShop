@@ -2,7 +2,7 @@
 @model IEnumerable<ClothesServiceModel>
 @{
     var clothes = Model.ToList();
-    ViewBag.Title = "Your clothes for sell";
+    ViewBag.Title = "Mine";
 }
 
 <h2 class="text-center">@ViewBag.Title</h2>
@@ -45,7 +45,8 @@
                 
                     </h6>
                     <br />
-                    <a asp-controller="Cloth" asp-action="Details" asp-route-id="@cloth.Id"
+                    <a asp-controller="Cloth" asp-action="Details" asp-route-id="@cloth.Id" 
+                       asp-route-information="@cloth.GetInformation()"
                        class="btn btn-success">Details</a>
                     @if (this.User.Identity.IsAuthenticated)
                     {

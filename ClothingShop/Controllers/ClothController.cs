@@ -1,9 +1,12 @@
 ﻿using ClothingShop.Core.Contracts;
+using ClothingShop.Core.Extensions;
 using ClothingShop.Core.Models.ClothModels;
 using ClothingShop.Extensions;
 using ClothingShop.Models.Clothes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NuGet.Protocol;
+using static ClothingShop.Areas.Admin.Constants.AdminConstants;
 
 namespace ClothingShop.Controllers
 {
@@ -22,6 +25,7 @@ namespace ClothingShop.Controllers
         }
 
         [AllowAnonymous]
+        [ResponseCache(Duration = 30)]
         public async Task<IActionResult> All([FromQuery] AllClothesQueryModel query)
         {
             var result = await clothService.All(
@@ -35,6 +39,8 @@ namespace ClothingShop.Controllers
             query.TotalClothesCount = result.TotalClothesCount;
             query.Categories = await clothService.AllCategoriesNames();
             query.Clothes = result.Clothes;
+
+            TempData["Method"] = "All";
 
             return View(query);
         }
@@ -84,10 +90,7 @@ namespace ClothingShop.Controllers
             var sellerId = await sellerService.GetSellerId(User.Id());
             await clothService.Create(model, sellerId);
 
-            return RedirectToAction(nameof(All), new AllClothesQueryModel()
-            {
-                Sorting = ClothesSorting.Newest
-            });
+            return RedirectToAction("Mine");
         }
 
         [HttpGet]
@@ -98,10 +101,16 @@ namespace ClothingShop.Controllers
                 return RedirectToAction(nameof(SellerController.Become), "Seller");
             }
 
+            if (await clothService.IsTheClothSeller(id, User.Id()) == false && this.User.IsInRole(AdminRoleName) == false)
+            {
+                return RedirectToPage("/Account/AccessDenied", new { area = "Identity" });
+            }
+
             if (await clothService.IsClothAvailable(id) == false)
             {
                 return RedirectToAction(nameof(All));
             }
+
 
             var cloth = await clothService.GetClothDetails(id);
             var categoryId = await clothService.GetClothCategoryId(id);
@@ -126,11 +135,21 @@ namespace ClothingShop.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(ClothAddToShopAndEditModel model)
+        public async Task<IActionResult> Edit(int id, ClothAddToShopAndEditModel model)
         {
             if ((await sellerService.ExistsById(User.Id())) == false)
             {
                 return RedirectToAction(nameof(SellerController.Become), "Seller");
+            }
+
+            if (id != model.Id)
+            {
+                return RedirectToPage("/Account/AccessDenied", new { area = "Identity" });
+            }
+
+            if (await clothService.IsTheClothSeller(id, User.Id()) == false && this.User.IsInRole(AdminRoleName) == false)
+            {
+                return RedirectToPage("/Account/AccessDenied", new { area = "Identity" });
             }
 
             if (await clothService.IsClothAvailable(model.Id) == false)
@@ -161,12 +180,18 @@ namespace ClothingShop.Controllers
 
             await clothService.Edit(model);
 
-            return RedirectToAction("All");
+            return RedirectToAction("Mine");
         }
 
 
         public async Task<IActionResult> Delete(int id)
         {
+            if (await clothService.IsTheClothSeller(id, User.Id()) == false &&
+                this.User.IsInRole(AdminRoleName) == false)
+            {
+                return RedirectToPage("/Account/AccessDenied", new {area = "Identity"});
+            }
+
             if (await clothService.IsClothAvailable(id))
             {
                 await clothService.Delete(id);
@@ -176,7 +201,17 @@ namespace ClothingShop.Controllers
                 throw new ArgumentException("Invalid ClothId");
             }
 
-            return RedirectToAction(nameof(All));
+            if (this.User.IsInRole(AdminRoleName) == false || TempData["Method"].ToString() == "Mine")
+            {
+                return RedirectToAction("Mine");
+            }
+            else
+            {
+                return RedirectToAction(nameof(All), new AllClothesQueryModel()
+                {
+                    Sorting = ClothesSorting.Newest
+                });
+            }
         }
 
         [AllowAnonymous]
@@ -232,6 +267,8 @@ namespace ClothingShop.Controllers
 
         public async Task<IActionResult> Mine()
         {
+            TempData["Method"] = "Mine";
+
             if ((await sellerService.ExistsById(User.Id())) == false)
             {
                 return RedirectToAction(nameof(SellerController.Become), "Seller");
@@ -245,6 +282,11 @@ namespace ClothingShop.Controllers
 
         public async Task<IActionResult> AddToCart(int id)
         {
+            if (this.User.IsInRole(AdminRoleName))
+            {
+                return RedirectToAction("Index", "Admin", new { area = "Admin" });
+            }
+
             var userId = User.Id();
 
             await clothService.AddClothToUsersCart(id, userId);
@@ -252,13 +294,21 @@ namespace ClothingShop.Controllers
             return StatusCode(204);
         }
 
-        public async Task<IActionResult> Cart()
+        public async Task<IActionResult> Cart(string id)
         {
-            var userId = User.Id();
+            if (this.User.IsInRole(AdminRoleName) && User.Id() == id)
+            {
+                return RedirectToAction("Index", "Admin", new { area = "Admin" });
+            }
+
+            if (String.IsNullOrEmpty(id))
+            {
+                id = User.Id();
+            }
 
             var model = new ClothesCartModel
             {
-                Clothes = await clothService.UserCartClothes(User.Id())
+                Clothes = await clothService.UserCartClothes(id)
             };
             model.TotalPrice = model.Clothes.Select(c => c.Price).Sum();
 
@@ -267,6 +317,10 @@ namespace ClothingShop.Controllers
 
         public async Task<IActionResult> RemoveFromCart(int id)
         {
+            if (this.User.IsInRole(AdminRoleName))
+            {
+                return RedirectToAction("Index", "Admin", new { area = "Admin" });
+            }
             var userId = User.Id();
 
             await clothService.RemoveClothFromUserCart(id, userId);
@@ -275,14 +329,22 @@ namespace ClothingShop.Controllers
         }
 
         [AllowAnonymous]
-        public async Task<IActionResult> Details(int id)
+        [ResponseCache(Duration = 30)]
+        public async Task<IActionResult> Details(int id, string information)
         {
-            if (await clothService.IsClothAvailable(id) == false)
+            if (await clothService.IsClothAvailable(id) == false)   
             {
                 return BadRequest();
             }
 
             var model = await clothService.ClothDetails(id);
+
+            if (information != model.GetInformation())
+            {
+                TempData["ErrorMessage"] = "Don't touch the url :)";
+
+                return RedirectToAction("Index", "Home");
+            }
 
             return View(model);
         }

@@ -17,14 +17,18 @@
             </h6>
             <br />
             <a asp-controller="Cloth" asp-action="Details" asp-route-id="@Model.Id"
+               asp-route-information="@Model.GetInformation()"
                class="btn btn-success">Details</a>
-            <p>
-                <form class="input-group-sm" asp-controller="Cloth"
+            @if (this.User.IsInRole(AdminRoleName) == false)
+            {
+                <p>
+                    <form class="input-group-sm" asp-controller="Cloth"
                       asp-action="AddToCart" asp-route-id="@Model.Id" method="post">
-                    <input class="btn btn-primary" type="submit" value="Add to Cart" />
-                </form>
-            </p>
-            @if (this.User.Identity.IsAuthenticated) //TODO Only Seller Should be able to access this tab
+                        <input class="btn btn-primary" type="submit" value="Add to Cart" />
+                    </form>
+                </p>
+            }
+            @if (this.User.IsInRole(AdminRoleName))
             {
                 //TODO Add Brand name to the product
                 <a asp-controller="Cloth" asp-action="Edit" asp-route-id="@Model.Id"

@@ -6,21 +6,36 @@
 }
 
 <h2 class="text-center">@ViewBag.Title</h2>
-<hr/>
+<hr />
 
 @if (!clothes.Any())
 {
     <div class="mt-4 p-5 bg-light">
         <p class="lead">
-            Your cart is empty.
-            Please add atleast one product.
+            @if (this.User.IsInRole(AdminRoleName) == false)
+            {
+            <p class="lead">
+                Your cart is empty.
+                Please add atleast one product.
+            </p>
+            }
+            else
+            {
+            <p class="lead">
+                User's cart is currently empty!
+            </p>
+            }
         </p>
         <hr class="my-4">
         <p class="lead">
-            @if (this.User.Identity.IsAuthenticated)
+            @if (this.User.IsInRole(AdminRoleName))
+            {
+                <a asp-area="Admin" asp-controller="User" asp-action="All"
+                   class="btn btn-primary btn-lg">All Users</a>
+            }else if (this.User.Identity.IsAuthenticated)
             {
                 <a asp-controller="Cloth" asp-action="All" class="btn btn-primary btn-lg"
-                   role="button">View all clothes</a>
+           role="button">View all clothes</a>
             }
         </p>
     </div>
@@ -42,13 +57,13 @@
                     <h6>
                         Brand:
                         <b>@cloth.Brand</b>
-                
+
                     </h6>
                     <br />
-                    @if (this.User.Identity.IsAuthenticated)
+                    @if (this.User.Identity.IsAuthenticated && this.User.IsInRole(AdminRoleName) == false)
                     {
                         <a asp-controller="Cloth" asp-action="RemoveFromCart" asp-route-id="@cloth.Id"
-                           class="btn btn-danger">Remove from cart</a>
+                   class="btn btn-danger">Remove from cart</a>
                     }
                 </div>
             </div>

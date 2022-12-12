@@ -1,0 +1,81 @@
+﻿@model IEnumerable<UserServiceModel>
+
+@{
+    ViewBag.Title = "All Users";
+}
+
+<h2 class="text-center">@ViewBag.Title</h2>
+<hr />
+
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th><label>Email</label></th>
+        <th><label>Username-Full Name</label></th>
+        <th><label>Phone Number</label></th>
+        <th><label>User Is Seller</label></th>
+        <th><label>Admin</label></th>
+        <th><label>User's cart</label></th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var user in Model)
+    {
+        <tr>
+            <td><label>@user.Email</label></td>
+            <td>
+                <label>@user.UserName
+                    @if (String.IsNullOrEmpty(user.PhoneNumber) == false)
+                    {
+                        @($"- {user.FullName}");
+                    }
+                    else
+                    {
+                        @($"- {"EMPTY"}");
+                    }
+                </label>
+            </td>
+            <td>
+                <label>
+                    @if (String.IsNullOrEmpty(user.PhoneNumber) == false)
+                    {
+                        @user.PhoneNumber
+                    }
+                    else
+                    {
+                        @($"{"EMPTY"}");
+                    }
+                </label>
+            </td>
+            <td>
+                @if (String.IsNullOrEmpty(user.PhoneNumber) == false)
+                {
+                    <label>✔</label>
+                }else
+                {
+                    <label class="text-center">❌</label>
+                }
+            </td>
+            <td>
+                @if (user.Email == AdminEmail)
+                {
+                    <label class="text-center">🌟</label>   
+                }
+            </td>
+            <td>
+                @if (user.Email == AdminEmail)
+                {
+                    <label class="text-center"> </label>   
+                }
+                else
+                {
+                    <form class="input-group-sm" asp-controller="Cloth"
+                      asp-action="Cart" asp-route-id="@user.UserId" method="post">
+                    <input class="btn btn-primary" type="submit" value="View user's cart"/>
+                </form>
+                }
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

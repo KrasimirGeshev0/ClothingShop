@@ -3,6 +3,7 @@ using ClothingShop.Core.Models.BrandModels;
 using ClothingShop.Models.Brands;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using static ClothingShop.Areas.Admin.Constants.AdminConstants;
 
 namespace ClothingShop.Controllers
 {
@@ -30,6 +31,10 @@ namespace ClothingShop.Controllers
         [HttpGet]
         public IActionResult Add()
         {
+            if (this.User.IsInRole(AdminRoleName) == false)
+            {
+                return RedirectToPage("/Account/AccessDenied", new { area = "Identity" });
+            }
             var model = new CreateBrandModel();
 
             return View(model);
@@ -37,6 +42,11 @@ namespace ClothingShop.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(CreateBrandModel model)
         {
+            if (this.User.IsInRole(AdminRoleName) == false)
+            {
+                return RedirectToPage("/Account/AccessDenied", new { area = "Identity" });
+            }
+
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -49,6 +59,11 @@ namespace ClothingShop.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
+            if (this.User.IsInRole(AdminRoleName) == false)
+            {
+                return RedirectToPage("/Account/AccessDenied", new { area = "Identity" });
+            }
+
             if (await brandService.IsBrandAvailable(id))
             {
                 await brandService.Delete(id);

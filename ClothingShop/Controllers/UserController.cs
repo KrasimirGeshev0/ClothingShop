@@ -106,6 +106,10 @@ namespace ClothingShop.Controllers
 
                 if (result.Succeeded)
                 {
+                    if (user != null && await userManager.IsInRoleAsync(user, "Administrator"))
+                    {
+                        return RedirectToAction("Index", "Admin", new { Area = "Admin" });
+                    }
                     return RedirectToAction("Index", "Home");
                 }
 

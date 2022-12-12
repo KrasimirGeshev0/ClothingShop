@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using ClothingShop.Core.ExternalData.HomePageExternal;
 using ClothingShop.Core.Models.HomeModels;
+using static ClothingShop.Areas.Admin.Constants.AdminConstants;
 
 namespace ClothingShop.Controllers
 {
@@ -10,6 +11,10 @@ namespace ClothingShop.Controllers
     {
         public IActionResult Index()
         {
+            if (this.User.IsInRole(AdminRoleName))
+            {
+                return RedirectToAction("Index", "Admin", new {area = "Admin" });
+            }
             var carouselModels = HomeCarouselSeed.SeedCarousel();   
             var genderSectionModels = HomeGenderSectionsSeed.SeedGenderSections();
             var model = new HomePageModel()

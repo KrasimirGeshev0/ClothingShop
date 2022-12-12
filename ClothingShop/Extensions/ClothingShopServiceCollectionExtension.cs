@@ -1,5 +1,7 @@
 ﻿using ClothingShop.Core.Contracts;
+using ClothingShop.Core.Contracts.Admin;
 using ClothingShop.Core.Services;
+using ClothingShop.Core.Services.Admin;
 using ClothingShop.Infrastructure.Data.Common;
 
 namespace ClothingShop.Extensions
@@ -13,6 +15,7 @@ namespace ClothingShop.Extensions
             services.AddScoped<IBrandService, BrandService>();
             services.AddScoped<ISellerService, SellerService>();
             services.AddScoped<IAppUserService, AppUserService>();
+            services.AddScoped<IUserService, UserService>();
             
             return services;
         }
