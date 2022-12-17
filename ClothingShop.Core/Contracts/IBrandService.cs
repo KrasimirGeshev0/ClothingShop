@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ClothingShop.Core.Models.BrandModels;
+using ClothingShop.Core.Models.ClothModels;
 
 namespace ClothingShop.Core.Contracts
 {
@@ -20,6 +21,10 @@ namespace ClothingShop.Core.Contracts
         Task Create(CreateBrandModel model);
 
         Task<int> BrandsCount();
+
+        Task<IEnumerable<ClothesBrandModel>> AllBrands();
+
+        Task<bool> BrandExists(int brandId);
     }
 }   
         

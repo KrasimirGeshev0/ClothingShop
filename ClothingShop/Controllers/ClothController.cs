@@ -57,7 +57,7 @@ namespace ClothingShop.Controllers
             var model = new ClothAddToShopAndEditModel()
             {
                 Categories = await clothService.AllCategories(),
-                Brands = await clothService.AllBrands()
+                Brands = await brandService.AllBrands()
             };
 
             return View(model);
@@ -68,7 +68,7 @@ namespace ClothingShop.Controllers
             if (!ModelState.IsValid)
             {
                 model.Categories = await clothService.AllCategories();
-                model.Brands = await clothService.AllBrands();
+                model.Brands = await brandService.AllBrands();
                 return View(model);
             }
 
@@ -82,7 +82,7 @@ namespace ClothingShop.Controllers
                 ModelState.AddModelError(nameof(model.CategoryId), "Category does not exists");
             }
 
-            if (await clothService.BrandExists(model.BrandId) == false)
+            if (await brandService.BrandExists(model.BrandId) == false)
             {
                 ModelState.AddModelError(nameof(model.BrandId), "Brand does not exists");
             }
@@ -128,7 +128,7 @@ namespace ClothingShop.Controllers
                 Price = cloth.Price,
                 Quantity = cloth.Quantity,
                 Categories = await clothService.AllCategories(),
-                Brands = await  clothService.AllBrands()
+                Brands = await brandService.AllBrands()
             };
 
             return View(model);
@@ -156,7 +156,7 @@ namespace ClothingShop.Controllers
             {
                 ModelState.AddModelError("", "Cloth does not exist");
                 model.Categories = await clothService.AllCategories();
-                model.Brands = await clothService.AllBrands();
+                model.Brands = await brandService.AllBrands();
 
                 return View(model);
             }
@@ -166,7 +166,7 @@ namespace ClothingShop.Controllers
                 ModelState.AddModelError(nameof(model.CategoryId), "Category does not exists");
             }
 
-            if (await clothService.BrandExists(model.BrandId) == false)
+            if (await brandService.BrandExists(model.BrandId) == false)
             {
                 ModelState.AddModelError(nameof(model.BrandId), "Brand does not exists");
             }
@@ -174,7 +174,7 @@ namespace ClothingShop.Controllers
             if (!ModelState.IsValid)
             {
                 model.Categories = await clothService.AllCategories();
-                model.Brands = await clothService.AllBrands();
+                model.Brands = await brandService.AllBrands();
                 return View(model);
             }
 

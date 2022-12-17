@@ -121,24 +121,10 @@ namespace ClothingShop.Core.Services
                 }).ToListAsync();
         }
 
-        public async Task<IEnumerable<ClothesBrandModel>> AllBrands()
-        {
-            return await repo.AllReadonly<Brand>()
-                .Select(c => new ClothesBrandModel()
-                {
-                    Id = c.Id,
-                    Name = c.Name
-                }).ToListAsync();
-        }
 
         public async Task<bool> CategoryExists(int categoryId)
         {
             return await repo.AllReadonly<Category>().AnyAsync(c => c.Id == categoryId);
-        }
-
-        public async Task<bool> BrandExists(int brandId)
-        {
-            return await repo.AllReadonly<Brand>().AnyAsync(b => b.Id == brandId);
         }
 
         public async Task<bool> IsClothAvailable(int clothId)

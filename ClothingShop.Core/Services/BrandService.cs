@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ClothingShop.Core.Contracts;
 using ClothingShop.Core.Models.BrandModels;
+using ClothingShop.Core.Models.ClothModels;
 using ClothingShop.Infrastructure.Data.Common;
 using ClothingShop.Infrastructure.Data.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -90,6 +91,21 @@ namespace ClothingShop.Core.Services
         public async Task<int> BrandsCount()
         {
            return await repo.All<Brand>().CountAsync();
+        }
+
+        public async Task<IEnumerable<ClothesBrandModel>> AllBrands()
+        {
+            return await repo.AllReadonly<Brand>()
+                .Select(c => new ClothesBrandModel()
+                {
+                    Id = c.Id,
+                    Name = c.Name
+                }).ToListAsync();
+        }
+
+        public async Task<bool> BrandExists(int brandId)
+        {
+            return await repo.AllReadonly<Brand>().AnyAsync(b => b.Id == brandId);
         }
     }
 }

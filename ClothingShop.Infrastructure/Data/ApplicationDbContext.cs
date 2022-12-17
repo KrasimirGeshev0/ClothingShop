@@ -26,11 +26,11 @@ namespace ClothingShop.Infrastructure.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.ApplyConfiguration(new ApplicationUserConfiguration());
-            builder.ApplyConfiguration(new SellerConfiguration());
-            builder.ApplyConfiguration(new BrandConfiguration());
-            builder.ApplyConfiguration(new CategoryConfiguration());
-            builder.ApplyConfiguration(new ClothConfiguration());
+            //builder.ApplyConfiguration(new ApplicationUserConfiguration());
+            //builder.ApplyConfiguration(new SellerConfiguration());
+            //builder.ApplyConfiguration(new BrandConfiguration());
+            //builder.ApplyConfiguration(new CategoryConfiguration());
+            //builder.ApplyConfiguration(new ClothConfiguration());
 
             builder.Entity<IdentityRole>().HasData(new IdentityRole { Id = "2c5e174e-3b0e-446f-86af-483d56fd7210", Name = "Administrator", NormalizedName = "ADMINISTRATOR".ToUpper() });
 

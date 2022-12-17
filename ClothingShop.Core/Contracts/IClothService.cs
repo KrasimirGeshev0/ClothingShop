@@ -19,11 +19,8 @@ namespace ClothingShop.Core.Contracts
         Task<IEnumerable<int>> AllClothesWithAvailableBrand();
 
         Task<IEnumerable<ClothesCategoryModel>> AllCategories();
-        Task<IEnumerable<ClothesBrandModel>> AllBrands();
 
         Task<bool> CategoryExists(int categoryId);
-
-        Task<bool> BrandExists(int brandId);
 
         Task<bool> IsClothAvailable(int clothId);
 
