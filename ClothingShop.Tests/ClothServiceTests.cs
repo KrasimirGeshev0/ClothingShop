@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ClothingShop.Core.Contracts;
+﻿using ClothingShop.Core.Contracts;
 using ClothingShop.Core.Models.ClothModels;
 using ClothingShop.Core.Services;
 using ClothingShop.Infrastructure.Data;
@@ -11,7 +6,6 @@ using ClothingShop.Infrastructure.Data.Common;
 using ClothingShop.Infrastructure.Data.Entities;
 using ClothingShop.Infrastructure.Data.Enums;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace ClothingShop.UTests
 {
@@ -27,7 +21,7 @@ namespace ClothingShop.UTests
         public void Setup()
         {
             var contextOptions = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase("HouseDB")
+                .UseInMemoryDatabase("ClothDB")
                 .Options;
 
             applicationDbContext = new ApplicationDbContext(contextOptions);
@@ -86,10 +80,12 @@ namespace ClothingShop.UTests
             });
             await repo.SaveChangesAsync();
 
-            var clothes = await clothService.All(sorting: ClothesSorting.Newest ,category: "Jackets", genderOrientation: "Female", currentPage: 1, clothesPerPage: 3);
+            var clothes = await clothService.All(sorting: ClothesSorting.Newest, category: "Jackets",
+                genderOrientation: "Female", currentPage: 1, clothesPerPage: 3);
 
             var dbClothes = await repo.AllReadonly<Cloth>().Where(c =>
-                c.Category.Name == "Jackets" && c.GenderOrientation == ProductGenderOrient.Female  && c.IsAvailable).ToListAsync();
+                    c.Category.Name == "Jackets" && c.GenderOrientation == ProductGenderOrient.Female && c.IsAvailable)
+                .ToListAsync();
 
 
             Assert.That(clothes.TotalClothesCount == dbClothes.Count);
@@ -459,7 +455,7 @@ namespace ClothingShop.UTests
 
 
             var dbCloth = await repo.GetByIdAsync<Cloth>(6);
-         
+
             Assert.That(dbCloth.Category.Id == categoryId);
         }
 
@@ -705,13 +701,13 @@ namespace ClothingShop.UTests
 
             await clothService.AddClothToUsersCart(6, "as");
 
-            var dbCloth = await repo.AllReadonly<ApplicationUserCloth>().Where(ac => ac.ApplicationUserId == "as" && ac.ClothId == 6).FirstAsync();
+            var dbCloth = await repo.AllReadonly<ApplicationUserCloth>()
+                .Where(ac => ac.ApplicationUserId == "as" && ac.ClothId == 6).FirstAsync();
 
             Assert.That(dbCloth.ApplicationUserId == "as");
             Assert.That(dbCloth.ClothId == 6);
         }
 
-        //UserCartClothes
         [Test]
         public async Task TestUserCartClothes()
         {
@@ -754,9 +750,165 @@ namespace ClothingShop.UTests
 
             var userClothes = await clothService.UserCartClothes("as");
 
-            var dbCloth = await repo.AllReadonly<ApplicationUserCloth>().Where(ac => ac.ApplicationUserId == "as" && ac.Cloth.IsAvailable).ToListAsync();
+            var dbCloth = await repo.AllReadonly<ApplicationUserCloth>()
+                .Where(ac => ac.ApplicationUserId == "as" && ac.Cloth.IsAvailable).ToListAsync();
 
             Assert.That(dbCloth.Count == userClothes.Count());
+        }
+
+        [Test]
+        public async Task TestRemoveClothFromUserCart()
+        {
+            var repo = new Repository(applicationDbContext);
+            var clothService = new ClothService(repo, sellerService);
+
+
+            await repo.AddAsync(new ApplicationUser()
+            {
+                Id = "as",
+                UserName = "asd",
+                NormalizedUserName = "ASD",
+                Email = "asd",
+                NormalizedEmail = "ASD"
+            });
+
+            await repo.AddAsync(new Cloth()
+            {
+                Id = 6,
+                Name = "Jacket",
+                Price = 23,
+                Description = "The best jacket ever",
+                ImageUrl = "",
+                GenderOrientation = ProductGenderOrient.Male,
+                IsAvailable = true,
+                CategoryId = 5,
+                Quantity = 2,
+                BrandId = 5,
+                SellerId = 1
+            });
+
+            await repo.AddAsync(new ApplicationUserCloth()
+            {
+                ClothId = 6,
+                ApplicationUserId = "as"
+            });
+
+            await repo.SaveChangesAsync();
+
+            var dbCartBefore = await repo.AllReadonly<ApplicationUserCloth>()
+                .Where(ac => ac.ApplicationUserId == "as" && ac.Cloth.IsAvailable).ToListAsync();
+
+            await clothService.RemoveClothFromUserCart(6, "as");
+
+            var dbCartAfter = await repo.AllReadonly<ApplicationUserCloth>()
+                .Where(ac => ac.ApplicationUserId == "as" && ac.Cloth.IsAvailable).ToListAsync();
+
+
+            Assert.That(dbCartBefore.Count - 1 == dbCartAfter.Count());
+        }
+
+        //[Test]
+        //public async Task TestClothDetails()
+        //{
+        //    var repo = new Repository(applicationDbContext);
+        //    var sellerService = new SellerService(repo);
+        //    var clothService = new ClothService(repo, sellerService);
+
+        //    await repo.AddAsync(new ApplicationUser()
+        //    {
+        //        Id = "as",
+        //        UserName = "asd",
+        //        NormalizedUserName = "ASD",
+        //        Email = "asd",
+        //        NormalizedEmail = "ASD"
+        //    });
+
+        //    await repo.AddAsync(new Seller()
+        //    {
+        //        Id = 1,
+        //        PhoneNumber = "",
+        //        FirstName = "asd",
+        //        LastName = "asd",
+        //        ApplicationUserId = "as"
+        //    });
+
+        //    await repo.AddAsync(new Cloth()
+        //    {
+        //        Id = 6,
+        //        Name = "Jacket",
+        //        Price = 23,
+        //        Description = "The best jacket ever",
+        //        ImageUrl = "dfg",
+        //        GenderOrientation = ProductGenderOrient.Male,
+        //        IsAvailable = true,
+        //        CategoryId = 5,
+        //        Quantity = 2,
+        //        BrandId = 5,
+        //        SellerId = 1
+        //    });
+
+        //    await repo.SaveChangesAsync();
+
+        //    var dbCloth = await repo.GetByIdAsync<Cloth>(6);
+
+        //    var clothDetails = await clothService.ClothDetails(6);
+
+        //    Assert.That(dbCloth.Name, Is.EqualTo(clothDetails.Name));
+        //    Assert.That(dbCloth.Description, Is.EqualTo(clothDetails.Description));
+        //    Assert.That(dbCloth.ImageUrl, Is.EqualTo(clothDetails.ImageUrl));
+        //    Assert.That(dbCloth.Price, Is.EqualTo(clothDetails.Price));
+
+        //} IsTheClothSeller
+
+
+        [Test]
+        public async Task TestIsTheClothSeller()
+        {
+            var repo = new Repository(applicationDbContext);
+            var sellerService = new SellerService(repo);
+            var clothService = new ClothService(repo, sellerService);
+
+            await repo.AddAsync(new ApplicationUser()
+            {
+                Id = "as",
+                UserName = "asd",
+                NormalizedUserName = "ASD",
+                Email = "asd",
+                NormalizedEmail = "ASD"
+            });
+
+            await repo.AddAsync(new Seller()
+            {
+                Id = 1,
+                PhoneNumber = "",
+                FirstName = "asd",
+                LastName = "asd",
+                ApplicationUserId = "as"
+            });
+
+            await repo.AddAsync(new Cloth()
+            {
+                Id = 6,
+                Name = "Jacket",
+                Price = 23,
+                Description = "The best jacket ever",
+                ImageUrl = "dfg",
+                GenderOrientation = ProductGenderOrient.Male,
+                IsAvailable = true,
+                CategoryId = 5,
+                Quantity = 2,
+                BrandId = 5,
+                SellerId = 1
+            });
+
+            await repo.SaveChangesAsync();
+
+            var mustBeTrue = await clothService.IsTheClothSeller(6, "as");
+            var mustBeFalse = await clothService.IsTheClothSeller(6, "adsfs");
+
+            Assert.True(mustBeTrue == true);
+            Assert.True(mustBeFalse == false);
+
         }
 
         [TearDown]

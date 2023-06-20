@@ -23,7 +23,7 @@
             <p>Category: <b>@Model.Category</b></p>
             <p>Brand: <b>@Model.Brand</b></p>
             <div class="form-inline">
-                @if (this.User.Identity.IsAuthenticated)
+                @if (this.User.IsInRole(AdminRoleName))
                 {
                     <a class="btn btn-warning" asp-controller="Cloth" asp-action="Edit"
                    asp-route-id="@Model.Id">Edit</a>
